@@ -185,12 +185,12 @@
   </div>
 
   <script>
-    // PASTE KODE URL APPS SCRIPT ANDA DI BAWAH INI
+    // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxNdCywUDPY6OR1z_yN27V4DXdRoX1MRj4ofa0VFteFdMMiIyIjR2PCH3wnQ5M8nw4/exec';
     let localLogs = [];
 
     window.onload = function() {
-      // Hapus memori NIP lama di lokal browser
+      // Hapus memori NIP lama agar tidak muncul otomatis lagi
       localStorage.removeItem('td_nipTD');
       document.getElementById('nipTD').value = '';
 
@@ -250,48 +250,44 @@
         return;
       }
 
-      const itemData = { waktu, program, keterangan, namaTD, nipTD, tanggal };
-      
       tambahBarisKeTabel(waktu, program, keterangan);
-      localLogs.push(itemData);
+      localLogs.push({ waktu, program, keterangan, namaTD, nipTD, tanggal });
       saveToLocalStorage(tanggal);
 
       const btnSimpan = document.getElementById('btnSimpan');
       btnSimpan.innerText = 'Mengirim...';
       btnSimpan.disabled = true;
 
-      // Pengiriman Data ke Apps Script
-      const params = new URLSearchParams();
-      params.append('nama_td', namaTD);
-      params.append('nip_td', nipTD);
-      params.append('tanggal', tanggal);
-      params.append('waktu', waktu);
-      params.append('program', program);
-      params.append('keterangan', keterangan);
+      const formData = new FormData();
+      formData.append('nama_td', namaTD);
+      formData.append('nip_td', nipTD);
+      formData.append('tanggal', tanggal);
+      formData.append('waktu', waktu);
+      formData.append('program', program);
+      formData.append('keterangan', keterangan);
 
-      fetch(scriptURL, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params.toString(),
-        mode: 'no-cors' 
-      })
-      .then(() => {
-        btnSimpan.innerText = '💾 Simpan ke Google Sheets';
-        btnSimpan.disabled = false;
-        document.getElementById('waktu').value = '';
-        document.getElementById('program').value = '';
-        document.getElementById('keterangan').value = '';
-        document.getElementById('waktu').focus();
-      })
-      .catch(err => {
-        console.error('Error saat menyimpan:', err);
-        btnSimpan.innerText = '💾 Simpan ke Google Sheets';
-        btnSimpan.disabled = false;
-      });
+      fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
+          btnSimpan.innerText = '💾 Simpan ke Google Sheets';
+          btnSimpan.disabled = false;
+          document.getElementById('waktu').value = '';
+          document.getElementById('program').value = '';
+          document.getElementById('keterangan').value = '';
+          document.getElementById('waktu').focus();
+        })
+        .catch(err => {
+          btnSimpan.innerText = '💾 Simpan ke Google Sheets';
+          btnSimpan.disabled = false;
+        });
     });
 
+    function cleanString(str) {
+      return String(str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
     function loadDataTanggal() {
-      const targetTanggal = document.getElementById('tanggalHari').value;
+      const targetTanggalRaw = document.getElementById('tanggalHari').value;
+      const targetClean = cleanString(targetTanggalRaw);
       const btnLoad = document.getElementById('btnLoad');
       btnLoad.innerText = '⏳ Memuat...';
       btnLoad.disabled = true;
@@ -303,7 +299,11 @@
             tbody.innerHTML = '';
             localLogs = [];
             
-            const filtered = data.filter(item => item.tanggal === targetTanggal);
+            const filtered = data.filter(item => {
+              if (!item.tanggal) return false;
+              const itemClean = cleanString(item.tanggal);
+              return itemClean.includes(targetClean) || targetClean.includes(itemClean);
+            });
             
             if (filtered.length > 0) {
               if (filtered[filtered.length - 1].nama_td) {
@@ -311,13 +311,19 @@
               }
               filtered.forEach(item => {
                 tambahBarisKeTabel(item.waktu, item.program, item.keterangan);
-                localLogs.push({ waktu: item.waktu, program: item.program, keterangan: item.keterangan, namaTD: item.nama_td, tanggal: item.tanggal });
+                localLogs.push({ 
+                  waktu: item.waktu, 
+                  program: item.program, 
+                  keterangan: item.keterangan, 
+                  namaTD: item.nama_td, 
+                  tanggal: item.tanggal 
+                });
               });
-              saveToLocalStorage(targetTanggal);
+              saveToLocalStorage(targetTanggalRaw);
               syncCetakMeta();
-              alert(`Berhasil memuat ${filtered.length} log untuk ${targetTanggal}`);
+              alert(`Berhasil memuat ${filtered.length} log untuk ${targetTanggalRaw}`);
             } else {
-              alert(`Tidak ada data log di Google Sheets untuk ${targetTanggal}`);
+              alert(`Tidak ada data log di Google Sheets untuk ${targetTanggalRaw}`);
             }
           } else {
             loadFromLocalStorage();
@@ -327,18 +333,24 @@
         })
         .catch(err => {
           loadFromLocalStorage();
-          alert('Berhasil memuat data tersimpan dari lokal HP!');
+          alert('Berhasil memuat data dari memori lokal!');
           btnLoad.innerText = '🔍 Muat Data Tanggal Ini';
           btnLoad.disabled = false;
         });
     }
 
-    function loadDataTanggalSilently(targetTanggal) {
+    function loadDataTanggalSilently(targetTanggalInput) {
+      const targetClean = cleanString(targetTanggalInput);
       fetch(scriptURL, { method: 'GET', redirect: 'follow' })
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) {
-            const filtered = data.filter(item => item.tanggal === targetTanggal);
+            const filtered = data.filter(item => {
+              if (!item.tanggal) return false;
+              const itemClean = cleanString(item.tanggal);
+              return itemClean.includes(targetClean) || targetClean.includes(itemClean);
+            });
+
             if (filtered.length > 0) {
               tbody.innerHTML = '';
               localLogs = [];
@@ -347,14 +359,20 @@
               }
               filtered.forEach(item => {
                 tambahBarisKeTabel(item.waktu, item.program, item.keterangan);
-                localLogs.push({ waktu: item.waktu, program: item.program, keterangan: item.keterangan, namaTD: item.nama_td, tanggal: item.tanggal });
+                localLogs.push({ 
+                  waktu: item.waktu, 
+                  program: item.program, 
+                  keterangan: item.keterangan, 
+                  namaTD: item.nama_td, 
+                  tanggal: item.tanggal 
+                });
               });
-              saveToLocalStorage(targetTanggal);
+              saveToLocalStorage(targetTanggalInput);
               syncCetakMeta();
             }
           }
         })
-        .catch(err => console.log('Menggunakan data penyimpanan lokal.'));
+        .catch(err => console.log('Menggunakan data lokal.'));
     }
 
     function tambahBarisKeTabel(waktu, program, keterangan) {
