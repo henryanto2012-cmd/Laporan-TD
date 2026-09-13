@@ -7,7 +7,7 @@
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-    .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
     
     .app-header { text-align: center; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; margin-bottom: 20px; }
     .app-header h1 { margin: 0; color: #2c3e50; font-size: 24px; text-transform: uppercase; }
@@ -37,20 +37,17 @@
     th, td { border: 1px solid #333; padding: 8px 10px; text-align: left; }
     th { background-color: #e9ecef; color: #212529; font-weight: bold; text-transform: uppercase; font-size: 12px; }
 
-    /* Kop Surat & Tanda Tangan */
-    .print-header { display: flex; align-items: center; gap: 15px; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
-    .print-header img { height: 50px; width: auto; }
+    .print-header { border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
     .print-header-text h2 { margin: 0; font-size: 18px; color: #002B66; text-transform: uppercase; font-weight: 800; }
     .print-header-text p { margin: 2px 0 0; font-size: 13px; font-weight: 600; color: #444; }
 
     .signature-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; font-size: 13px; line-height: 1.4; page-break-inside: avoid; }
     .sig-box-left { text-align: left; }
-    .sig-box-right { text-align: left; padding-left: 80px; }
+    .sig-box-right { text-align: right; }
     .sig-title-bold { font-weight: bold; }
-    .sig-space { height: 65px; }
+    .sig-space { height: 60px; }
     .sig-name { font-weight: bold; text-decoration: underline; }
 
-    /* CSS Khusus Cetak PDF */
     @media print {
       body { background: white; padding: 0; color: black; }
       .container { max-width: 100%; box-shadow: none; padding: 0; }
@@ -67,9 +64,7 @@
 <body>
 
   <div class="container">
-    <!-- KOP SURAT LAPORAN -->
     <div class="print-header">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TVRI_logo_2019.svg/512px-TVRI_logo_2019.svg.png" alt="Logo TVRI">
       <div class="print-header-text">
         <h2>LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h2>
         <p>LPP TVRI Stasiun Kalimantan Utara</p>
@@ -77,44 +72,51 @@
     </div>
 
     <div class="app-header no-print">
-      <h1>Log Laporan Harian TD</h1>
+      <h1>LOG LAPORAN HARIAN TD</h1>
       <p>Input Jadwal, Program Acara, Filler, dan Export PDF Harian</p>
     </div>
 
+    <!-- META CARD -->
     <div class="meta-card">
-      <div class="form-group">
-        <label>Nama Technical Director (TD)</label>
-        <input type="text" id="namaTD" placeholder="Masukkan Nama TD Bertugas">
+      <div>
+        <div class="form-group">
+          <label>NAMA TECHNICAL DIRECTOR (TD)</label>
+          <input type="text" id="namaTD" placeholder="Masukkan Nama TD Bertugas" value="">
+        </div>
+        <div class="form-group">
+          <label>NIP</label>
+          <input type="text" id="nipTD" placeholder="Masukkan NIP (Opsional/Manual)" value="" autocomplete="off">
+        </div>
       </div>
       <div class="form-group">
-        <label>Tanggal / Hari</label>
+        <label>TANGGAL / HARI</label>
         <div style="display: flex; gap: 8px;">
           <input type="text" id="tanggalHari" style="flex: 1;">
-          <button class="btn btn-warning no-print" onclick="loadDataTanggal()" id="btnLoad">🔄 Muat Data Tanggal Ini</button>
+          <button class="btn btn-warning no-print" onclick="loadDataTanggal()" id="btnLoad">🔍 Muat Data Tanggal Ini</button>
         </div>
       </div>
     </div>
 
-    <!-- FORM INPUT NAMA & NIP PENANDATANGAN -->
+    <!-- PENGATURAN PENANDATANGAN LAPORAN (PDF) -->
     <div class="sig-input-card no-print">
-      <label style="font-size: 13px; font-weight: bold; color: #198754; text-transform: uppercase;">Pengaturan Penandatangan Laporan (PDF)</label>
+      <label style="font-size: 13px; font-weight: bold; color: #198754; text-transform: uppercase;">PENGATURAN PENANDATANGAN LAPORAN (PDF)</label>
       <div class="sig-input-grid">
         <div>
           <strong style="font-size: 12px; color: #333;">KPP Teknik:</strong>
           <div class="form-group" style="margin-top: 5px;">
-            <input type="text" id="inputNamaLeft" placeholder="Nama KPP Teknik" value="Afif Fakhrurrozi">
+            <input type="text" id="inputNamaLeft" placeholder="Nama KPP Teknik">
           </div>
           <div class="form-group">
-            <input type="text" id="inputNipLeft" placeholder="NIP KPP Teknik" value="197901312014091001">
+            <input type="text" id="inputNipLeft" placeholder="NIP KPP Teknik">
           </div>
         </div>
         <div>
           <strong style="font-size: 12px; color: #333;">Kepala Sub. Bag. TU:</strong>
           <div class="form-group" style="margin-top: 5px;">
-            <input type="text" id="inputNamaRight" placeholder="Nama Kepala Sub. Bag. TU" value="Henryanto">
+            <input type="text" id="inputNamaRight" placeholder="Nama Kepala Sub. Bag. TU">
           </div>
           <div class="form-group">
-            <input type="text" id="inputNipRight" placeholder="NIP Kepala Sub. Bag. TU" value="199411022025041001">
+            <input type="text" id="inputNipRight" placeholder="NIP Kepala Sub. Bag. TU">
           </div>
         </div>
       </div>
@@ -125,15 +127,15 @@
       <form id="formLog">
         <div class="grid-3">
           <div class="form-group">
-            <label>Waktu</label>
+            <label>WAKTU</label>
             <input type="text" id="waktu" placeholder="15.55 - 15.57" required>
           </div>
           <div class="form-group">
-            <label>Program Acara / Filler / ILM</label>
+            <label>PROGRAM ACARA / FILLER / ILM</label>
             <input type="text" id="program" placeholder="Bergabung Kaltara" required>
           </div>
           <div class="form-group">
-            <label>Keterangan</label>
+            <label>KETERANGAN</label>
             <input type="text" id="keterangan" placeholder="Segmen 1 / Promo / Sting">
           </div>
         </div>
@@ -142,7 +144,7 @@
     </div>
 
     <div class="action-bar no-print">
-      <h3 style="margin: 0; color: #333;">Daftar Log Hari Ini</h3>
+      <h3 style="margin: 0; color: #333; font-size: 18px;">Daftar Log Hari Ini</h3>
       <button class="btn btn-success" onclick="window.print()">🖨️ Download / Cetak PDF</button>
     </div>
 
@@ -150,9 +152,9 @@
       <table id="tabelLog">
         <thead>
           <tr>
-            <th style="width: 20%;">Waktu</th>
-            <th style="width: 55%;">Program Acara, Filler, ILM</th>
-            <th style="width: 25%;">Keterangan</th>
+            <th style="width: 20%;">WAKTU</th>
+            <th style="width: 55%;">PROGRAM ACARA, FILLER, ILM</th>
+            <th style="width: 25%;">KETERANGAN</th>
           </tr>
         </thead>
         <tbody id="tbodyLog">
@@ -160,23 +162,23 @@
       </table>
     </div>
 
-    <!-- BLOK TANDA TANGAN -->
+    <!-- BLOK TANDA TANGAN 2 KOLOM -->
     <div class="signature-section">
       <div class="sig-box-left">
         <div>Mengetahui,</div>
         <div class="sig-title-bold">KPP Teknik</div>
         <div class="sig-space"></div>
-        <div class="sig-name" id="txtNamaLeft">Afif Fakhrurrozi</div>
-        <div>NIP. <span id="txtNipLeft">197901312014091001</span></div>
+        <div class="sig-name" id="txtNamaLeft">-</div>
+        <div>NIP. <span id="txtNipLeft">-</span></div>
       </div>
 
       <div class="sig-box-right">
-        <div>Tanjung Selor, <span id="txtTanggalCetak">12 September 2026</span></div>
+        <div>Tanjung Selor, <span id="txtTanggalCetak">-</span></div>
         <div>Mengetahui,</div>
         <div class="sig-title-bold">Kepala Sub. Bag. TU</div>
         <div class="sig-space"></div>
-        <div class="sig-name" id="txtNamaRight">Henryanto</div>
-        <div>NIP. <span id="txtNipRight">199411022025041001</span></div>
+        <div class="sig-name" id="txtNamaRight">-</div>
+        <div>NIP. <span id="txtNipRight">-</span></div>
       </div>
     </div>
 
@@ -184,15 +186,29 @@
 
   <script>
     const scriptURL = 'PASTE_URL_APPS_SCRIPT_ANDA_DISINI';
+    let localLogs = [];
 
     window.onload = function() {
+      // Hapus memori NIP lama agar tidak muncul otomatis lagi
+      localStorage.removeItem('td_nipTD');
+      document.getElementById('nipTD').value = '';
+
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
-      document.getElementById('tanggalHari').value = now.toLocaleDateString('id-ID', options);
+      const todayString = now.toLocaleDateString('id-ID', options);
       
+      const elTanggal = document.getElementById('tanggalHari');
+      if (!elTanggal.value) {
+        elTanggal.value = todayString;
+      }
+
+      loadFromLocalStorage();
       syncCetakMeta();
+      loadDataTanggalSilently(elTanggal.value);
     };
 
+    document.getElementById('namaTD').addEventListener('input', syncCetakMeta);
+    document.getElementById('nipTD').addEventListener('input', syncCetakMeta);
     document.getElementById('tanggalHari').addEventListener('change', syncCetakMeta);
     document.getElementById('inputNamaLeft').addEventListener('input', syncCetakMeta);
     document.getElementById('inputNipLeft').addEventListener('input', syncCetakMeta);
@@ -207,6 +223,12 @@
       document.getElementById('txtNipLeft').innerText = document.getElementById('inputNipLeft').value || '-';
       document.getElementById('txtNamaRight').innerText = document.getElementById('inputNamaRight').value || '-';
       document.getElementById('txtNipRight').innerText = document.getElementById('inputNipRight').value || '-';
+
+      localStorage.setItem('td_namaTD', document.getElementById('namaTD').value);
+      localStorage.setItem('td_namaLeft', document.getElementById('inputNamaLeft').value);
+      localStorage.setItem('td_nipLeft', document.getElementById('inputNipLeft').value);
+      localStorage.setItem('td_namaRight', document.getElementById('inputNamaRight').value);
+      localStorage.setItem('td_nipRight', document.getElementById('inputNipRight').value);
     }
 
     const form = document.getElementById('formLog');
@@ -216,17 +238,22 @@
       e.preventDefault();
       
       const namaTD = document.getElementById('namaTD').value;
+      const nipTD = document.getElementById('nipTD').value;
       const tanggal = document.getElementById('tanggalHari').value;
       const waktu = document.getElementById('waktu').value;
       const program = document.getElementById('program').value;
       const keterangan = document.getElementById('keterangan').value;
 
       if (!namaTD) {
-        alert('Mohon isi Nama TD terlebih dahulu!');
+        alert('Mohon isi Nama Technical Director (TD) terlebih dahulu!');
         return;
       }
 
+      const itemData = { waktu, program, keterangan, namaTD, nipTD, tanggal };
+      
       tambahBarisKeTabel(waktu, program, keterangan);
+      localLogs.push(itemData);
+      saveToLocalStorage(tanggal);
 
       const btnSimpan = document.getElementById('btnSimpan');
       btnSimpan.innerText = 'Mengirim...';
@@ -234,13 +261,14 @@
 
       const formData = new FormData();
       formData.append('nama_td', namaTD);
+      formData.append('nip_td', nipTD);
       formData.append('tanggal', tanggal);
       formData.append('waktu', waktu);
       formData.append('program', program);
       formData.append('keterangan', keterangan);
 
-      fetch(scriptURL, { method: 'POST', body: formData })
-        .then(res => {
+      fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
           btnSimpan.innerText = '💾 Simpan ke Google Sheets';
           btnSimpan.disabled = false;
           document.getElementById('waktu').value = '';
@@ -260,30 +288,65 @@
       btnLoad.innerText = '⏳ Memuat...';
       btnLoad.disabled = true;
 
-      fetch(scriptURL)
+      fetch(scriptURL, { method: 'GET', redirect: 'follow' })
         .then(res => res.json())
         .then(data => {
-          tbody.innerHTML = '';
-          const filtered = data.filter(item => item.tanggal === targetTanggal);
-          
-          if (filtered.length > 0) {
-            document.getElementById('namaTD').value = filtered[filtered.length - 1].nama_td;
-            syncCetakMeta();
-            filtered.forEach(item => {
-              tambahBarisKeTabel(item.waktu, item.program, item.keterangan);
-            });
-            alert(`Berhasil memuat ${filtered.length} log untuk ${targetTanggal}`);
+          if (Array.isArray(data)) {
+            tbody.innerHTML = '';
+            localLogs = [];
+            
+            const filtered = data.filter(item => item.tanggal === targetTanggal);
+            
+            if (filtered.length > 0) {
+              if (filtered[filtered.length - 1].nama_td) {
+                document.getElementById('namaTD').value = filtered[filtered.length - 1].nama_td;
+              }
+              filtered.forEach(item => {
+                tambahBarisKeTabel(item.waktu, item.program, item.keterangan);
+                localLogs.push({ waktu: item.waktu, program: item.program, keterangan: item.keterangan, namaTD: item.nama_td, tanggal: item.tanggal });
+              });
+              saveToLocalStorage(targetTanggal);
+              syncCetakMeta();
+              alert(`Berhasil memuat ${filtered.length} log untuk ${targetTanggal}`);
+            } else {
+              alert(`Tidak ada data log di Google Sheets untuk ${targetTanggal}`);
+            }
           } else {
-            alert(`Tidak ada data log untuk ${targetTanggal}`);
+            loadFromLocalStorage();
           }
-          btnLoad.innerText = '🔄 Muat Data Tanggal Ini';
+          btnLoad.innerText = '🔍 Muat Data Tanggal Ini';
           btnLoad.disabled = false;
         })
         .catch(err => {
-          alert('Gagal mengambil data dari Google Sheets.');
-          btnLoad.innerText = '🔄 Muat Data Tanggal Ini';
+          loadFromLocalStorage();
+          alert('Berhasil memuat data dari penyimpanan lokal!');
+          btnLoad.innerText = '🔍 Muat Data Tanggal Ini';
           btnLoad.disabled = false;
         });
+    }
+
+    function loadDataTanggalSilently(targetTanggal) {
+      fetch(scriptURL, { method: 'GET', redirect: 'follow' })
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            const filtered = data.filter(item => item.tanggal === targetTanggal);
+            if (filtered.length > 0) {
+              tbody.innerHTML = '';
+              localLogs = [];
+              if (filtered[filtered.length - 1].nama_td) {
+                document.getElementById('namaTD').value = filtered[filtered.length - 1].nama_td;
+              }
+              filtered.forEach(item => {
+                tambahBarisKeTabel(item.waktu, item.program, item.keterangan);
+                localLogs.push({ waktu: item.waktu, program: item.program, keterangan: item.keterangan, namaTD: item.nama_td, tanggal: item.tanggal });
+              });
+              saveToLocalStorage(targetTanggal);
+              syncCetakMeta();
+            }
+          }
+        })
+        .catch(err => console.log('Menggunakan data lokal.'));
     }
 
     function tambahBarisKeTabel(waktu, program, keterangan) {
@@ -294,6 +357,36 @@
         <td>${keterangan}</td>
       `;
       tbody.appendChild(tr);
+    }
+
+    function saveToLocalStorage(tanggal) {
+      localStorage.setItem('td_saved_date', tanggal);
+      localStorage.setItem('td_saved_logs', JSON.stringify(localLogs));
+    }
+
+    function loadFromLocalStorage() {
+      const savedLogs = localStorage.getItem('td_saved_logs');
+
+      if (localStorage.getItem('td_namaTD')) document.getElementById('namaTD').value = localStorage.getItem('td_namaTD');
+      if (localStorage.getItem('td_namaLeft')) document.getElementById('inputNamaLeft').value = localStorage.getItem('td_namaLeft');
+      if (localStorage.getItem('td_nipLeft')) document.getElementById('inputNipLeft').value = localStorage.getItem('td_nipLeft');
+      if (localStorage.getItem('td_namaRight')) document.getElementById('inputNamaRight').value = localStorage.getItem('td_namaRight');
+      if (localStorage.getItem('td_nipRight')) document.getElementById('inputNipRight').value = localStorage.getItem('td_nipRight');
+
+      // NIP dipastikan kosong
+      document.getElementById('nipTD').value = '';
+
+      if (savedLogs) {
+        try {
+          localLogs = JSON.parse(savedLogs);
+          tbody.innerHTML = '';
+          localLogs.forEach(item => {
+            tambahBarisKeTabel(item.waktu, item.program, item.keterangan);
+          });
+        } catch (e) {
+          console.error('Gagal membaca log lokal', e);
+        }
+      }
     }
   </script>
 
