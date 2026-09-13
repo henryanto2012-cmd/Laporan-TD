@@ -85,7 +85,7 @@
         </div>
         <div class="form-group">
           <label>NIP</label>
-          <input type="text" id="nipTD" placeholder="Masukkan NIP (Opsional/Manual)" value="" autocomplete="off">
+          <input type="text" id="nipTD" placeholder="Masukkan NIP (Kosong/Manual)" value="" autocomplete="off">
         </div>
       </div>
       <div class="form-group">
@@ -185,11 +185,12 @@
   </div>
 
   <script>
-    const scriptURL = 'PASTE_URL_APPS_SCRIPT_ANDA_DISINI';
+    // PASTE KODE URL APPS SCRIPT ANDA DI BAWAH INI
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxNdCywUDPY6OR1z_yN27V4DXdRoX1MRj4ofa0VFteFdMMiIyIjR2PCH3wnQ5M8nw4/exec';
     let localLogs = [];
 
     window.onload = function() {
-      // Hapus memori NIP lama agar tidak muncul otomatis lagi
+      // Hapus memori NIP lama di lokal browser
       localStorage.removeItem('td_nipTD');
       document.getElementById('nipTD').value = '';
 
@@ -259,27 +260,34 @@
       btnSimpan.innerText = 'Mengirim...';
       btnSimpan.disabled = true;
 
-      const formData = new FormData();
-      formData.append('nama_td', namaTD);
-      formData.append('nip_td', nipTD);
-      formData.append('tanggal', tanggal);
-      formData.append('waktu', waktu);
-      formData.append('program', program);
-      formData.append('keterangan', keterangan);
+      // Pengiriman Data ke Apps Script
+      const params = new URLSearchParams();
+      params.append('nama_td', namaTD);
+      params.append('nip_td', nipTD);
+      params.append('tanggal', tanggal);
+      params.append('waktu', waktu);
+      params.append('program', program);
+      params.append('keterangan', keterangan);
 
-      fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
-        .then(() => {
-          btnSimpan.innerText = '💾 Simpan ke Google Sheets';
-          btnSimpan.disabled = false;
-          document.getElementById('waktu').value = '';
-          document.getElementById('program').value = '';
-          document.getElementById('keterangan').value = '';
-          document.getElementById('waktu').focus();
-        })
-        .catch(err => {
-          btnSimpan.innerText = '💾 Simpan ke Google Sheets';
-          btnSimpan.disabled = false;
-        });
+      fetch(scriptURL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
+        mode: 'no-cors' 
+      })
+      .then(() => {
+        btnSimpan.innerText = '💾 Simpan ke Google Sheets';
+        btnSimpan.disabled = false;
+        document.getElementById('waktu').value = '';
+        document.getElementById('program').value = '';
+        document.getElementById('keterangan').value = '';
+        document.getElementById('waktu').focus();
+      })
+      .catch(err => {
+        console.error('Error saat menyimpan:', err);
+        btnSimpan.innerText = '💾 Simpan ke Google Sheets';
+        btnSimpan.disabled = false;
+      });
     });
 
     function loadDataTanggal() {
@@ -319,7 +327,7 @@
         })
         .catch(err => {
           loadFromLocalStorage();
-          alert('Berhasil memuat data dari penyimpanan lokal!');
+          alert('Berhasil memuat data tersimpan dari lokal HP!');
           btnLoad.innerText = '🔍 Muat Data Tanggal Ini';
           btnLoad.disabled = false;
         });
@@ -346,7 +354,7 @@
             }
           }
         })
-        .catch(err => console.log('Menggunakan data lokal.'));
+        .catch(err => console.log('Menggunakan data penyimpanan lokal.'));
     }
 
     function tambahBarisKeTabel(waktu, program, keterangan) {
@@ -373,7 +381,6 @@
       if (localStorage.getItem('td_namaRight')) document.getElementById('inputNamaRight').value = localStorage.getItem('td_namaRight');
       if (localStorage.getItem('td_nipRight')) document.getElementById('inputNipRight').value = localStorage.getItem('td_nipRight');
 
-      // NIP dipastikan kosong
       document.getElementById('nipTD').value = '';
 
       if (savedLogs) {
