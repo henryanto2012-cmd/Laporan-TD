@@ -96,9 +96,9 @@
         </div>
     </div>
 
-    <!-- 5. TEMPLATE PDF (Diposisikan di luar layar agar siap dirender HP tanpa blank) -->
-    <div style="position: absolute; left: -9999px; top: 0; width: 800px;">
-        <div id="pdfTemplate" style="padding: 30px; font-family: 'Arial', sans-serif; background-color: white;">
+    <!-- 5. TEMPLATE PDF (Muncul normal di layar saat dicetak agar terbaca sempurna di HP) -->
+    <div id="pdfContainer" style="display:none; margin-top: 20px; background: white; padding: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <div id="pdfTemplate" style="padding: 20px; font-family: 'Arial', sans-serif; background-color: white;">
             <!-- Header PDF -->
             <div style="background-color: #1e3a8a; color: white; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
                 <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
@@ -117,7 +117,7 @@
                 </tbody>
             </table>
 
-            <!-- Tanda Tangan PDF (Tanpa Garis Bawah Nama) -->
+            <!-- Tanda Tangan PDF -->
             <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
                 <tr style="vertical-align: bottom;">
                     <td style="width: 33%;">
@@ -136,9 +136,9 @@
                     <td style="height: 70px;"></td>
                 </tr>
                 <tr>
-                    <td><span id="pdfKppNama" style="font-weight: bold;"></span><br>NIP. <span id="pdfKppNip"></span></td>
-                    <td><span id="pdfTdNama" style="font-weight: bold;"></span><br>NIP. <span id="pdfTdNip"></span></td>
-                    <td><span id="pdfTuNama" style="font-weight: bold;"></span><br>NIP. <span id="pdfTuNip"></span></td>
+                    <td><u id="pdfKppNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfKppNip"></span></td>
+                    <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
+                    <td><u id="pdfTuNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTuNip"></span></td>
                 </tr>
             </table>
         </div>
@@ -277,11 +277,11 @@
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
-            document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '-';
+            document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
             document.getElementById('pdfKppNama').innerText = document.getElementById('kppNama').value || '....................';
-            document.getElementById('pdfKppNip').innerText = document.getElementById('kppNip').value || '-';
+            document.getElementById('pdfKppNip').innerText = document.getElementById('kppNip').value || '....................';
             document.getElementById('pdfTuNama').innerText = document.getElementById('tuNama').value || '....................';
-            document.getElementById('pdfTuNip').innerText = document.getElementById('tuNip').value || '-';
+            document.getElementById('pdfTuNip').innerText = document.getElementById('tuNip').value || '....................';
 
             let pdfBody = document.getElementById('pdfTabelBody');
             pdfBody.innerHTML = '';
@@ -296,6 +296,10 @@
                 `;
             });
 
+            // Tampilkan elemen PDF sebentar agar HP berhasil membaca dan merendernya ke memori
+            let container = document.getElementById('pdfContainer');
+            container.style.display = 'block';
+
             let element = document.getElementById('pdfTemplate');
 
             let opt = {
@@ -306,9 +310,12 @@
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
+            // Beri jeda 500ms agar rendering HP stabil, lalu cetak dan sembunyikan kembali
             setTimeout(() => {
-                html2pdf().set(opt).from(element).save();
-            }, 300);
+                html2pdf().set(opt).from(element).save().then(() => {
+                    container.style.display = 'none';
+                });
+            }, 500);
         }
     </script>
 </body>
