@@ -56,20 +56,23 @@
         <div class="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200 mb-5">
             <h3 class="font-bold text-green-800 mb-2 text-xs sm:text-sm">PENGATURAN PENANDATANGANAN LAPORAN (PDF)</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+                <!-- Technical Director (Tetap Manual) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">Technical Director (TD)</label>
                     <input type="text" id="tdNama" placeholder="Nama TD" class="w-full p-2 border rounded mb-2 bg-white">
                     <input type="text" id="tdNip" placeholder="NIP TD" class="w-full p-2 border rounded bg-white">
                 </div>
+                <!-- KPP Teknik (Default Permanen & Dikunci) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">KPP Teknik</label>
-                    <input type="text" id="kppNama" placeholder="Nama KPP" class="w-full p-2 border rounded mb-2 bg-white">
-                    <input type="text" id="kppNip" placeholder="NIP KPP" class="w-full p-2 border rounded bg-white">
+                    <input type="text" id="kppNama" value="AZIM RIFA'I" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
+                    <input type="text" id="kppNip" value="199309152025041003" readonly class="w-full p-2 border rounded bg-gray-100 text-gray-700 cursor-not-allowed">
                 </div>
+                <!-- Kepala Sub. Bag. TU (Default Permanen & Dikunci) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">Kepala Sub. Bag. TU</label>
-                    <input type="text" id="tuNama" placeholder="Nama Ka. Subbag" class="w-full p-2 border rounded mb-2 bg-white">
-                    <input type="text" id="tuNip" placeholder="NIP Ka. Subbag" class="w-full p-2 border rounded bg-white">
+                    <input type="text" id="tuNama" value="Ari Jaya Wijaya" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
+                    <input type="text" id="tuNip" value="197308032014091001" readonly class="w-full p-2 border rounded bg-gray-100 text-gray-700 cursor-not-allowed">
                 </div>
             </div>
         </div>
@@ -168,9 +171,9 @@
                 <td style="height: 70px;"></td>
             </tr>
             <tr>
-                <td><u id="pdfKppNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfKppNip"></span></td>
+                <td><u id="pdfKppNama" style="font-weight: bold;">AZIM RIFA'I</u><br>NIP: <span id="pdfKppNip">199309152025041003</span></td>
                 <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
-                <td><u id="pdfTuNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTuNip"></span></td>
+                <td><u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya</u><br>NIP: <span id="pdfTuNip">197308032014091001</span></td>
             </tr>
         </table>
     </div>
@@ -191,7 +194,8 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            ['tdNama', 'tdNip', 'kppNama', 'kppNip', 'tuNama', 'tuNip'].forEach(id => {
+            // Hanya simpan & muat nama/NIP untuk bagian TD (karena KPP dan TU sudah permanen)
+            ['tdNama', 'tdNip'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
             });
@@ -307,12 +311,13 @@
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
+            // Masukkan data tanda tangan (TD manual, KPP & TU otomatis dari nilai input permanen)
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
             document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
-            document.getElementById('pdfKppNama').innerText = document.getElementById('kppNama').value || '....................';
-            document.getElementById('pdfKppNip').innerText = document.getElementById('kppNip').value || '....................';
-            document.getElementById('pdfTuNama').innerText = document.getElementById('tuNama').value || '....................';
-            document.getElementById('pdfTuNip').innerText = document.getElementById('tuNip').value || '....................';
+            document.getElementById('pdfKppNama').innerText = document.getElementById('kppNama').value;
+            document.getElementById('pdfKppNip').innerText = document.getElementById('kppNip').value;
+            document.getElementById('pdfTuNama').innerText = document.getElementById('tuNama').value;
+            document.getElementById('pdfTuNip').innerText = document.getElementById('tuNip').value;
 
             let pdfBody = document.getElementById('pdfTabelBody');
             pdfBody.innerHTML = '';
