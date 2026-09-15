@@ -44,12 +44,10 @@
         <!-- 2 & 3. INPUT LOG ACARA & TOMBOL TAMBAH -->
         <div class="bg-gray-50 p-3 sm:p-4 rounded-lg border mb-5">
             <h3 class="font-bold text-blue-800 mb-2 text-xs sm:text-sm">+ Tambah Baris Log Acara</h3>
-            <!-- Responsif: Menumpuk vertikal di HP, sejajar di layar besar -->
             <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <input type="text" id="inputWaktu" placeholder="Waktu (Ex: 15.55 - 15.57)" class="w-full sm:w-1/4 p-2 border rounded text-xs sm:text-sm">
                 <input type="text" id="inputProgram" placeholder="Program Acara / Filler / ILM" class="w-full sm:w-2/4 p-2 border rounded text-xs sm:text-sm">
                 <input type="text" id="inputKet" placeholder="Keterangan" class="w-full sm:w-1/4 p-2 border rounded text-xs sm:text-sm">
-                <!-- Tombol Tambah ke Tabel -->
                 <button onclick="tambahLog()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-xs sm:text-sm transition">
                     + Tambah
                 </button>
@@ -98,10 +96,10 @@
         </div>
     </div>
 
-    <!-- 5. TEMPLATE PDF TERSEMBUNYI (Penyempurnaan berdasarkan permintaan) -->
-    <div id="pdfTemplate" class="hidden">
-        <div style="padding: 30px; font-family: 'Arial', sans-serif; background-color: white;">
-            <!-- Header PDF Baru (Background biru diperkecil) -->
+    <!-- 5. TEMPLATE PDF (Diposisikan di luar layar agar siap dirender HP tanpa blank) -->
+    <div style="position: absolute; left: -9999px; top: 0; width: 800px;">
+        <div id="pdfTemplate" style="padding: 30px; font-family: 'Arial', sans-serif; background-color: white;">
+            <!-- Header PDF -->
             <div style="background-color: #1e3a8a; color: white; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
                 <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
             </div>
@@ -119,11 +117,10 @@
                 </tbody>
             </table>
 
-            <!-- Tanda Tangan PDF (Disejajarkan dan diberi space lebar) -->
+            <!-- Tanda Tangan PDF (Tanpa Garis Bawah Nama) -->
             <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
                 <tr style="vertical-align: bottom;">
                     <td style="width: 33%;">
-                        <!-- Spasi agar tulisan 'Mengetahui' sejajar dengan kolom kanan yang ada tanggalnya -->
                         <br>Mengetahui,<br><strong>KPP Teknik</strong>
                     </td>
                     <td style="width: 33%;">
@@ -133,16 +130,15 @@
                         Tanjung Selor, <span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
                     </td>
                 </tr>
-                <!-- Spacer untuk tempat TTD Manual (Tinggi 70px) -->
                 <tr>
                     <td style="height: 70px;"></td>
                     <td style="height: 70px;"></td>
                     <td style="height: 70px;"></td>
                 </tr>
                 <tr>
-                    <td><u id="pdfKppNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfKppNip"></span></td>
-                    <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
-                    <td><u id="pdfTuNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTuNip"></span></td>
+                    <td><span id="pdfKppNama" style="font-weight: bold;"></span><br>NIP. <span id="pdfKppNip"></span></td>
+                    <td><span id="pdfTdNama" style="font-weight: bold;"></span><br>NIP. <span id="pdfTdNip"></span></td>
+                    <td><span id="pdfTuNama" style="font-weight: bold;"></span><br>NIP. <span id="pdfTuNip"></span></td>
                 </tr>
             </table>
         </div>
@@ -155,7 +151,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('tanggalFilter').value = today;
             
-            // Cek reset harian
             let savedDate = localStorage.getItem('logDate');
             if (savedDate !== today) {
                 localStorage.removeItem('logs');
@@ -165,7 +160,6 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Mengatur input TTD
             ['tdNama', 'tdNip', 'kppNama', 'kppNip', 'tuNama', 'tuNip'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
@@ -273,9 +267,8 @@
         function downloadPDF() {
             if(logs.length === 0) return alert("Tidak ada data untuk dicetak!");
 
-            let tglInput = document.getElementById('tanggalFilter').value; // Format: YYYY-MM-DD
+            let tglInput = document.getElementById('tanggalFilter').value;
             
-            // Konversi Tanggal ke format: 15 September 2026
             let tglParts = tglInput.split('-');
             let bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             let namaBulan = bulanArr[parseInt(tglParts[1]) - 1];
@@ -284,11 +277,11 @@
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
-            document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
+            document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '-';
             document.getElementById('pdfKppNama').innerText = document.getElementById('kppNama').value || '....................';
-            document.getElementById('pdfKppNip').innerText = document.getElementById('kppNip').value || '....................';
+            document.getElementById('pdfKppNip').innerText = document.getElementById('kppNip').value || '-';
             document.getElementById('pdfTuNama').innerText = document.getElementById('tuNama').value || '....................';
-            document.getElementById('pdfTuNip').innerText = document.getElementById('tuNip').value || '....................';
+            document.getElementById('pdfTuNip').innerText = document.getElementById('tuNip').value || '-';
 
             let pdfBody = document.getElementById('pdfTabelBody');
             pdfBody.innerHTML = '';
@@ -304,19 +297,18 @@
             });
 
             let element = document.getElementById('pdfTemplate');
-            element.style.display = 'block';
 
             let opt = {
                 margin:       0.3,
                 filename:     `Laporan_TD_${tglInput}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.style.display = 'none';
-            });
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save();
+            }, 300);
         }
     </script>
 </body>
