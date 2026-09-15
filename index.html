@@ -88,7 +88,6 @@
                         <th class="border p-2 text-left w-1/4">WAKTU</th>
                         <th class="border p-2 text-left w-2/4">PROGRAM ACARA, FILLER, ILM</th>
                         <th class="border p-2 text-left w-1/4">KETERANGAN</th>
-                        <!-- Kolom Aksi Ditambahkan -->
                         <th class="border p-2 text-center w-16">AKSI</th> 
                     </tr>
                 </thead>
@@ -99,16 +98,12 @@
         </div>
     </div>
 
-    <!-- 5. TEMPLATE PDF TERSEMBUNYI (Header Diperbarui, Tanpa Logo/Teks TVRI Kaltara) -->
+    <!-- 5. TEMPLATE PDF TERSEMBUNYI (Penyempurnaan berdasarkan permintaan) -->
     <div id="pdfTemplate" class="hidden">
         <div style="padding: 30px; font-family: 'Arial', sans-serif; background-color: white;">
-            <!-- Header PDF Baru -->
-            <div style="background-color: #1e3a8a; color: white; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
-                <h1 style="margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
-            </div>
-            
-            <div style="margin-bottom: 15px; text-align: right; font-size: 11px; color: #555;">
-                Tanggal Laporan: <strong id="pdfTanggal"></strong>
+            <!-- Header PDF Baru (Background biru diperkecil) -->
+            <div style="background-color: #1e3a8a; color: white; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+                <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
             </div>
 
             <!-- Tabel PDF -->
@@ -124,16 +119,29 @@
                 </tbody>
             </table>
 
-            <!-- Tanda Tangan PDF -->
-            <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 30px; border: none;">
+            <!-- Tanda Tangan PDF (Disejajarkan dan diberi space lebar) -->
+            <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
+                <tr style="vertical-align: bottom;">
+                    <td style="width: 33%;">
+                        <!-- Spasi agar tulisan 'Mengetahui' sejajar dengan kolom kanan yang ada tanggalnya -->
+                        <br>Mengetahui,<br><strong>KPP Teknik</strong>
+                    </td>
+                    <td style="width: 33%;">
+                        <br><br><strong>Technical Director (TD)</strong>
+                    </td>
+                    <td style="width: 33%;">
+                        Tanjung Selor, <span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                    </td>
+                </tr>
+                <!-- Spacer untuk tempat TTD Manual (Tinggi 70px) -->
                 <tr>
-                    <td style="width: 33%; padding-bottom: 60px;">Mengetahui,<br><strong>KPP Teknik</strong></td>
-                    <td style="width: 33%; padding-bottom: 60px;"></td>
-                    <td style="width: 33%; padding-bottom: 60px;"><span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong></td>
+                    <td style="height: 70px;"></td>
+                    <td style="height: 70px;"></td>
+                    <td style="height: 70px;"></td>
                 </tr>
                 <tr>
                     <td><u id="pdfKppNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfKppNip"></span></td>
-                    <td><strong>Technical Director (TD)</strong><br><br><br><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
+                    <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
                     <td><u id="pdfTuNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTuNip"></span></td>
                 </tr>
             </table>
@@ -157,7 +165,7 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Mengatur input TTD (Default kosong jika belum pernah diisi)
+            // Mengatur input TTD
             ['tdNama', 'tdNip', 'kppNama', 'kppNip', 'tuNama', 'tuNip'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
@@ -166,7 +174,6 @@
             renderTable();
         });
 
-        // Fungsi Tombol "+ Tambah"
         function tambahLog() {
             let waktu = document.getElementById('inputWaktu').value;
             let program = document.getElementById('inputProgram').value;
@@ -183,27 +190,23 @@
             renderTable();
         }
 
-        // FUNGSI BARU: Hapus Baris Data
         function hapusLog(index) {
             let confirmHapus = confirm("Apakah Anda yakin ingin menghapus log ini?");
             if (confirmHapus) {
-                logs.splice(index, 1); // Menghapus data dari array berdasarkan urutan
-                localStorage.setItem('logs', JSON.stringify(logs)); // Update penyimpanan
-                renderTable(); // Tampilkan ulang tabel
+                logs.splice(index, 1);
+                localStorage.setItem('logs', JSON.stringify(logs));
+                renderTable();
             }
         }
 
-        // Render tabel (Sudah disesuaikan dengan tombol hapus)
         function renderTable() {
             let tbody = document.getElementById('tabelLog');
             tbody.innerHTML = '';
             if(logs.length === 0) {
-                // colspan diubah menjadi 4 karena ada penambahan kolom AKSI
                 tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-gray-400 italic">Belum ada data log</td></tr>`;
                 return;
             }
             
-            // Tambahkan index untuk mendeteksi baris mana yang dihapus
             logs.forEach((log, index) => {
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
@@ -270,9 +273,15 @@
         function downloadPDF() {
             if(logs.length === 0) return alert("Tidak ada data untuk dicetak!");
 
-            let tglInput = document.getElementById('tanggalFilter').value;
-            document.getElementById('pdfTanggal').innerText = tglInput;
-            document.getElementById('pdfTanggalTtd').innerText = tglInput;
+            let tglInput = document.getElementById('tanggalFilter').value; // Format: YYYY-MM-DD
+            
+            // Konversi Tanggal ke format: 15 September 2026
+            let tglParts = tglInput.split('-');
+            let bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            let namaBulan = bulanArr[parseInt(tglParts[1]) - 1];
+            let formatTgl = `${tglParts[2]} ${namaBulan} ${tglParts[0]}`;
+            
+            document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
             document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
