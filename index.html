@@ -6,20 +6,41 @@
     <title>Laporan Harian TD</title>
     <!-- Tailwind CSS untuk Layout Responsif (HP & PC) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf.js untuk cetak PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* CSS Khusus untuk Pengaturan Cetak PDF / Print */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 10px;
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 p-2 sm:p-4 md:p-8 font-sans">
 
-    <!-- Container Utama (Responsif di HP & PC) -->
-    <div class="max-w-4xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md border-t-4 border-blue-600">
+    <!-- Container Utama (Web View) -->
+    <div class="max-w-4xl mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md border-t-4 border-blue-600 no-print">
         
         <!-- HEADER WEB -->
         <div class="text-center mb-6 border-b pb-3">
             <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-blue-900">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
-        <!-- 1. PENGATURAN PENANDATANGANAN (Default Kosong) -->
+        <!-- 1. PENGATURAN PENANDATANGANAN -->
         <div class="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200 mb-5">
             <h3 class="font-bold text-green-800 mb-2 text-xs sm:text-sm">PENGATURAN PENANDATANGANAN LAPORAN (PDF)</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
@@ -75,7 +96,7 @@
         <div class="flex justify-between items-center mb-3">
             <h3 class="font-bold text-gray-800 text-sm sm:text-base">Daftar Log Hari Ini</h3>
             <button onclick="downloadPDF()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded shadow font-semibold text-xs sm:text-sm">
-                🖨️ Cetak PDF
+                🖨️ Cetak / Simpan PDF
             </button>
         </div>
         
@@ -96,52 +117,50 @@
         </div>
     </div>
 
-    <!-- 5. TEMPLATE PDF (Muncul normal di layar saat dicetak agar terbaca sempurna di HP) -->
-    <div id="pdfContainer" style="display:none; margin-top: 20px; background: white; padding: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <div id="pdfTemplate" style="padding: 20px; font-family: 'Arial', sans-serif; background-color: white;">
-            <!-- Header PDF -->
-            <div style="background-color: #1e3a8a; color: white; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
-                <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
-            </div>
-
-            <!-- Tabel PDF -->
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-                <thead>
-                    <tr style="background-color: #2563eb; color: white; text-align: left; font-size: 12px;">
-                        <th style="padding: 10px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
-                        <th style="padding: 10px; border: 1px solid #1d4ed8; width: 45%;">Program Acara / Filler / ILM</th>
-                        <th style="padding: 10px; border: 1px solid #1d4ed8; width: 30%;">Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody id="pdfTabelBody" style="font-size: 11px; color: #333;">
-                </tbody>
-            </table>
-
-            <!-- Tanda Tangan PDF -->
-            <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
-                <tr style="vertical-align: bottom;">
-                    <td style="width: 33%;">
-                        <br>Mengetahui,<br><strong>KPP Teknik</strong>
-                    </td>
-                    <td style="width: 33%;">
-                        <br><br><strong>Technical Director (TD)</strong>
-                    </td>
-                    <td style="width: 33%;">
-                        Tanjung Selor, <span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="height: 70px;"></td>
-                    <td style="height: 70px;"></td>
-                    <td style="height: 70px;"></td>
-                </tr>
-                <tr>
-                    <td><u id="pdfKppNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfKppNip"></span></td>
-                    <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
-                    <td><u id="pdfTuNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTuNip"></span></td>
-                </tr>
-            </table>
+    <!-- 5. AREA KHUSUS CETAK PDF (Hanya muncul saat tombol cetak ditekan) -->
+    <div id="printArea" style="background-color: white; padding: 20px; font-family: 'Arial', sans-serif;">
+        <!-- Header PDF -->
+        <div style="background-color: #1e3a8a; color: white; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+            <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
+
+        <!-- Tabel PDF -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+            <thead>
+                <tr style="background-color: #2563eb; color: white; text-align: left; font-size: 12px;">
+                    <th style="padding: 10px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
+                    <th style="padding: 10px; border: 1px solid #1d4ed8; width: 45%;">Program Acara / Filler / ILM</th>
+                    <th style="padding: 10px; border: 1px solid #1d4ed8; width: 30%;">Keterangan</th>
+                </tr>
+            </thead>
+            <tbody id="pdfTabelBody" style="font-size: 11px; color: #333;">
+            </tbody>
+        </table>
+
+        <!-- Tanda Tangan PDF -->
+        <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
+            <tr style="vertical-align: bottom;">
+                <td style="width: 33%;">
+                    <br>Mengetahui,<br><strong>KPP Teknik</strong>
+                </td>
+                <td style="width: 33%;">
+                    <br><br><strong>Technical Director (TD)</strong>
+                </td>
+                <td style="width: 33%;">
+                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 70px;"></td>
+                <td style="height: 70px;"></td>
+                <td style="height: 70px;"></td>
+            </tr>
+            <tr>
+                <td><u id="pdfKppNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfKppNip"></span></td>
+                <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
+                <td><u id="pdfTuNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTuNip"></span></td>
+            </tr>
+        </table>
     </div>
 
     <script>
@@ -296,26 +315,8 @@
                 `;
             });
 
-            // Tampilkan elemen PDF sebentar agar HP berhasil membaca dan merendernya ke memori
-            let container = document.getElementById('pdfContainer');
-            container.style.display = 'block';
-
-            let element = document.getElementById('pdfTemplate');
-
-            let opt = {
-                margin:       0.3,
-                filename:     `Laporan_TD_${tglInput}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            // Beri jeda 500ms agar rendering HP stabil, lalu cetak dan sembunyikan kembali
-            setTimeout(() => {
-                html2pdf().set(opt).from(element).save().then(() => {
-                    container.style.display = 'none';
-                });
-            }, 500);
+            // Jalankan fungsi cetak bawaan browser (Aman di semua HP & PC)
+            window.print();
         }
     </script>
 </body>
