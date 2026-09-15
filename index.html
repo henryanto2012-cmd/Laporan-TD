@@ -7,8 +7,19 @@
     <!-- Tailwind CSS untuk Layout Responsif (HP & PC) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Sembunyikan area cetak secara default di halaman web */
+        #printArea {
+            display: none;
+        }
+
         /* CSS Khusus untuk Pengaturan Cetak PDF / Print */
         @media print {
+            /* Paksa browser agar mencetak warna latar belakang (background color) */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             body * {
                 visibility: hidden;
             }
@@ -16,6 +27,7 @@
                 visibility: visible;
             }
             #printArea {
+                display: block !important;
                 position: absolute;
                 left: 0;
                 top: 0;
@@ -117,17 +129,17 @@
         </div>
     </div>
 
-    <!-- 5. AREA KHUSUS CETAK PDF (Hanya muncul saat tombol cetak ditekan) -->
+    <!-- 5. AREA KHUSUS CETAK PDF (Tersembunyi di web, tampil rapi saat dicetak) -->
     <div id="printArea" style="background-color: white; padding: 20px; font-family: 'Arial', sans-serif;">
-        <!-- Header PDF -->
-        <div style="background-color: #1e3a8a; color: white; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+        <!-- Header PDF Berwarna Biru -->
+        <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 25px;">
             <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
-        <!-- Tabel PDF -->
+        <!-- Tabel PDF Berwarna -->
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
             <thead>
-                <tr style="background-color: #2563eb; color: white; text-align: left; font-size: 12px;">
+                <tr style="background-color: #2563eb !important; color: white !important; text-align: left; font-size: 12px;">
                     <th style="padding: 10px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
                     <th style="padding: 10px; border: 1px solid #1d4ed8; width: 45%;">Program Acara / Filler / ILM</th>
                     <th style="padding: 10px; border: 1px solid #1d4ed8; width: 30%;">Keterangan</th>
@@ -315,7 +327,7 @@
                 `;
             });
 
-            // Jalankan fungsi cetak bawaan browser (Aman di semua HP & PC)
+            // Panggil fungsi cetak browser
             window.print();
         }
     </script>
