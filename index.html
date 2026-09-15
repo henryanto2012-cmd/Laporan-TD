@@ -73,7 +73,7 @@
 
         <div id="statusMsg" class="text-center font-bold text-xs sm:text-sm mb-4 hidden"></div>
 
-        <!-- 4. DAFTAR LOG (Tanpa Kolom Aksi) -->
+        <!-- 4. DAFTAR LOG -->
         <div class="flex justify-between items-center mb-3">
             <h3 class="font-bold text-gray-800 text-sm sm:text-base">Daftar Log Hari Ini</h3>
             <button onclick="downloadPDF()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded shadow font-semibold text-xs sm:text-sm">
@@ -88,6 +88,8 @@
                         <th class="border p-2 text-left w-1/4">WAKTU</th>
                         <th class="border p-2 text-left w-2/4">PROGRAM ACARA, FILLER, ILM</th>
                         <th class="border p-2 text-left w-1/4">KETERANGAN</th>
+                        <!-- Kolom Aksi Ditambahkan -->
+                        <th class="border p-2 text-center w-16">AKSI</th> 
                     </tr>
                 </thead>
                 <tbody id="tabelLog" class="text-xs sm:text-sm">
@@ -181,20 +183,38 @@
             renderTable();
         }
 
-        // Render tabel tanpa kolom aksi
+        // FUNGSI BARU: Hapus Baris Data
+        function hapusLog(index) {
+            let confirmHapus = confirm("Apakah Anda yakin ingin menghapus log ini?");
+            if (confirmHapus) {
+                logs.splice(index, 1); // Menghapus data dari array berdasarkan urutan
+                localStorage.setItem('logs', JSON.stringify(logs)); // Update penyimpanan
+                renderTable(); // Tampilkan ulang tabel
+            }
+        }
+
+        // Render tabel (Sudah disesuaikan dengan tombol hapus)
         function renderTable() {
             let tbody = document.getElementById('tabelLog');
             tbody.innerHTML = '';
             if(logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-gray-400 italic">Belum ada data log</td></tr>`;
+                // colspan diubah menjadi 4 karena ada penambahan kolom AKSI
+                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-gray-400 italic">Belum ada data log</td></tr>`;
                 return;
             }
-            logs.forEach((log) => {
+            
+            // Tambahkan index untuk mendeteksi baris mana yang dihapus
+            logs.forEach((log, index) => {
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="p-2 border">${log.waktu}</td>
                         <td class="p-2 border">${log.program}</td>
                         <td class="p-2 border">${log.keterangan}</td>
+                        <td class="p-2 border text-center">
+                            <button onclick="hapusLog(${index})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-bold transition" title="Hapus baris ini">
+                                ❌
+                            </button>
+                        </td>
                     </tr>
                 `;
             });
