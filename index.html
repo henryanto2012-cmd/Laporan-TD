@@ -75,15 +75,11 @@
                 </div>
             </div>
 
-            <!-- Input Manual PDU & PD -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm pt-2 border-t border-green-200">
+            <!-- Input Manual PD Umum (PDU yang diganti nama) -->
+            <div class="grid grid-cols-1 gap-3 text-xs sm:text-sm pt-2 border-t border-green-200">
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-1">PDU (Manual)</label>
-                    <input type="text" id="inputPdu" placeholder="Contoh: PDU I / PDU II" class="w-full p-2 border rounded bg-white">
-                </div>
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-1">PD (Manual)</label>
-                    <input type="text" id="inputPd" placeholder="Contoh: PD I / PD II" class="w-full p-2 border rounded bg-white">
+                    <label class="block text-gray-700 font-semibold mb-1">PD Umum (Manual)</label>
+                    <input type="text" id="inputPdUmum" placeholder="Contoh: Nama / Keterangan PD Umum" class="w-full p-2 border rounded bg-white">
                 </div>
             </div>
         </div>
@@ -150,12 +146,6 @@
             <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
-        <!-- Informasi Tambahan PDU & PD -->
-        <div style="margin-bottom: 15px; font-size: 12px; color: #333; display: flex; justify-content: space-between;">
-            <div><strong>PDU:</strong> <span id="pdfPduText">-</span></div>
-            <div><strong>PD:</strong> <span id="pdfPdText">-</span></div>
-        </div>
-
         <!-- Tabel PDF Berwarna -->
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <thead>
@@ -169,13 +159,14 @@
             </tbody>
         </table>
 
-        <!-- Tanda Tangan PDF (TD di Kiri, Tanggal & KPP Teknik di Kanan, Kasubbag TU di Tengah Bawah) -->
+        <!-- Tanda Tangan PDF (TD di Kiri, PD Umum & Tanggal & KPP Teknik di Kanan, Kasubbag TU di Tengah Bawah) -->
         <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
             <tr style="vertical-align: bottom;">
                 <td style="width: 50%; padding-bottom: 5px;">
                     <br><strong>Technical Director (TD)</strong>
                 </td>
                 <td style="width: 50%; padding-bottom: 5px;">
+                    <span id="pdfPdUmumText" style="display: block; margin-bottom: 5px; font-weight: bold;"></span>
                     Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
                 </td>
             </tr>
@@ -221,8 +212,8 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Simpan & muat nama/NIP TD, PDU, dan PD
-            ['tdNama', 'tdNip', 'inputPdu', 'inputPd'].forEach(id => {
+            // Simpan & muat nama/NIP TD dan PD Umum
+            ['tdNama', 'tdNip', 'inputPdUmum'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
             });
@@ -287,8 +278,7 @@
 
             let payload = {
                 tanggal: document.getElementById('tanggalFilter').value,
-                pdu: document.getElementById('inputPdu').value,
-                pd: document.getElementById('inputPd').value,
+                pdUmum: document.getElementById('inputPdUmum').value,
                 logs: logs,
                 ttd: {
                     tdNama: document.getElementById('tdNama').value, tdNip: document.getElementById('tdNip').value,
@@ -340,9 +330,9 @@
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
-            // Masukkan data PDU dan PD ke area cetak
-            document.getElementById('pdfPduText').innerText = document.getElementById('inputPdu').value || '-';
-            document.getElementById('pdfPdText').innerText = document.getElementById('inputPd').value || '-';
+            // Masukkan data PD Umum ke area cetak di sebelah kanan atas KPP Teknik
+            let pdUmumVal = document.getElementById('inputPdUmum').value;
+            document.getElementById('pdfPdUmumText').innerText = pdUmumVal ? pdUmumVal : '';
 
             // Masukkan data tanda tangan
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
