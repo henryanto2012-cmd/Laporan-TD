@@ -165,28 +165,49 @@
         </table>
 
         <!-- Tanda Tangan PDF -->
-        <table style="width: 100%; text-align: center; font-size: 10px; margin-top: 15px; border: none;">
-            <!-- Baris Jabatan & Tanggal -->
-            <tr style="vertical-align: bottom;">
-                <td style="width: 50%; padding-bottom: 5px; text-align: left; padding-left: 50px;">
-                    <br><strong>Technical Director (TD)</strong>
-                </td>
-                <td style="width: 50%; padding-bottom: 5px; text-align: right; padding-right: 50px;">
-                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
+        <table style="width: 100%; font-size: 10px; margin-top: 15px; border: none;">
+            
+            <!-- BARIS 1: Tanggal (Kanan Atas) -->
+            <tr>
+                <td style="width: 50%;"></td>
+                <td style="width: 50%; text-align: right; padding-right: 60px; padding-bottom: 10px;">
+                    Tanjung Selor, <span id="pdfTanggalTtd"></span>
                 </td>
             </tr>
-            <!-- Spasi Tanda Tangan Baris 1 -->
+
+            <!-- BARIS 2: Jabatan (Technical Director & KPP Teknik) -->
             <tr style="vertical-align: bottom;">
-                <td style="height: 60px; padding-left: 50px;"></td>
-                <td style="height: 60px; padding-right: 50px;"></td>
+                <td style="width: 50%; text-align: left; padding-left: 60px;">
+                    <strong>Technical Director (TD)</strong>
+                </td>
+                <td style="width: 50%; text-align: right; padding-right: 60px;">
+                    <strong>KPP Teknik</strong>
+                </td>
             </tr>
-            <!-- Baris Nama & NIP Baris 1 -->
+            
+            <!-- SPASI TANDA TANGAN -->
+            <tr style="vertical-align: bottom;">
+                <td style="height: 90px; padding-left: 50px;"></td>
+                <td style="height: 90px; padding-right: 50px;"></td>
+            </tr>
+
+            <!-- BARIS 3: Nama (TD di Kiri, KPP di Kanan) -->
+            <tr style="vertical-align: bottom;">
+                <td style="text-align: left; padding-left: 30px; padding-bottom: 2px;">
+                    <u id="pdfTdNama" style="font-weight: bold;"></u>
+                </td>
+                <td style="text-align: right; padding-right: 30px; padding-bottom: 2px;">
+                    <u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u>
+                </td>
+            </tr>
+
+            <!-- BARIS 4: NIP (TD di Kiri, KPP di Kanan) -->
             <tr style="vertical-align: top;">
-                <td style="text-align: left; padding-left: 50px;">
-                    <u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span>
+                <td style="text-align: left; padding-left: 60px;">
+                    NIP: <span id="pdfTdNip"></span>
                 </td>
-                <td style="text-align: right; padding-right: 50px;">
-                    <u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u><br>NIP: <span id="pdfKppNip">199309152025041003</span>
+                <td style="text-align: right; padding-right: 60px;">
+                    NIP: <span id="pdfKppNip">199309152025041003</span>
                 </td>
             </tr>
 
