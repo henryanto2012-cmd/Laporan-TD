@@ -14,7 +14,6 @@
 
         /* CSS Khusus untuk Pengaturan Cetak PDF / Print */
         @media print {
-            /* Paksa browser agar mencetak warna latar belakang (background color) */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -52,10 +51,10 @@
             <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-blue-900">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
-        <!-- 1. PENGATURAN PENANDATANGANAN -->
+        <!-- 1. PENGATURAN PENANDATANGANAN & ATRIBUT TAMBAHAN -->
         <div class="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200 mb-5">
-            <h3 class="font-bold text-green-800 mb-2 text-xs sm:text-sm">PENGATURAN PENANDATANGANAN LAPORAN (PDF)</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+            <h3 class="font-bold text-green-800 mb-2 text-xs sm:text-sm">PENGATURAN PENANDATANGANAN & ATRIBUT (PDF)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm mb-3">
                 <!-- Technical Director (Manual) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">Technical Director (TD)</label>
@@ -73,6 +72,18 @@
                     <label class="block text-gray-700 font-semibold mb-1">Kepala Sub. Bag. TU</label>
                     <input type="text" id="tuNama" value="Ari Jaya Wijaya, SE., M.Si" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
                     <input type="text" id="tuNip" value="197308032014091001" readonly class="w-full p-2 border rounded bg-gray-100 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+
+            <!-- Input Manual PDU & PD -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm pt-2 border-t border-green-200">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">PDU (Manual)</label>
+                    <input type="text" id="inputPdu" placeholder="Contoh: PDU I / PDU II" class="w-full p-2 border rounded bg-white">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">PD (Manual)</label>
+                    <input type="text" id="inputPd" placeholder="Contoh: PD I / PD II" class="w-full p-2 border rounded bg-white">
                 </div>
             </div>
         </div>
@@ -135,8 +146,14 @@
     <!-- 5. AREA KHUSUS CETAK PDF (Tersembunyi di web, tampil rapi saat dicetak) -->
     <div id="printArea" style="background-color: white; padding: 20px; font-family: 'Arial', sans-serif;">
         <!-- Header PDF Berwarna Biru -->
-        <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 25px;">
+        <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
             <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
+        </div>
+
+        <!-- Informasi Tambahan PDU & PD -->
+        <div style="margin-bottom: 15px; font-size: 12px; color: #333; display: flex; justify-content: space-between;">
+            <div><strong>PDU:</strong> <span id="pdfPduText">-</span></div>
+            <div><strong>PD:</strong> <span id="pdfPdText">-</span></div>
         </div>
 
         <!-- Tabel PDF Berwarna -->
@@ -152,15 +169,14 @@
             </tbody>
         </table>
 
-        <!-- Tanda Tangan PDF Format Segitiga (TD di Kiri, KPP Teknik di Kanan, Kasubbag TU di Tengah Bawah) -->
+        <!-- Tanda Tangan PDF (TD di Kiri, Tanggal & KPP Teknik di Kanan, Kasubbag TU di Tengah Bawah) -->
         <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
-            <!-- Baris 1: Technical Director (Kiri dengan Tanggal) & KPP Teknik (Kanan) -->
             <tr style="vertical-align: bottom;">
                 <td style="width: 50%; padding-bottom: 5px;">
-                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>Technical Director (TD)</strong>
+                    <br><strong>Technical Director (TD)</strong>
                 </td>
                 <td style="width: 50%; padding-bottom: 5px;">
-                    <br><strong>KPP Teknik</strong>
+                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
                 </td>
             </tr>
             <tr style="vertical-align: bottom;">
@@ -205,8 +221,8 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Simpan & muat nama/NIP untuk bagian TD
-            ['tdNama', 'tdNip'].forEach(id => {
+            // Simpan & muat nama/NIP TD, PDU, dan PD
+            ['tdNama', 'tdNip', 'inputPdu', 'inputPd'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
             });
@@ -271,6 +287,8 @@
 
             let payload = {
                 tanggal: document.getElementById('tanggalFilter').value,
+                pdu: document.getElementById('inputPdu').value,
+                pd: document.getElementById('inputPd').value,
                 logs: logs,
                 ttd: {
                     tdNama: document.getElementById('tdNama').value, tdNip: document.getElementById('tdNip').value,
@@ -321,6 +339,10 @@
             let formatTgl = `${tglParts[2]} ${namaBulan} ${tglParts[0]}`;
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
+
+            // Masukkan data PDU dan PD ke area cetak
+            document.getElementById('pdfPduText').innerText = document.getElementById('inputPdu').value || '-';
+            document.getElementById('pdfPdText').innerText = document.getElementById('inputPd').value || '-';
 
             // Masukkan data tanda tangan
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
