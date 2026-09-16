@@ -164,36 +164,44 @@
             </tbody>
         </table>
 
-        <!-- Tanda Tangan PDF (3 Kolom: Kiri=TD, Tengah=Kasubag TU, Kanan=KPP Teknik + Tanggal) -->
+        <!-- Tanda Tangan PDF -->
         <table style="width: 100%; text-align: center; font-size: 10px; margin-top: 15px; border: none;">
-            <!-- Baris Jabatan & Tanggal -->
+            <!-- Baris 1: Kiri (TD) & Kanan (KPP Teknik + Tanggal) -->
             <tr style="vertical-align: bottom;">
-                <td style="width: 33%; padding-bottom: 5px;">
+                <td style="width: 50%; padding-bottom: 5px; text-align: center;">
                     <br><strong>Technical Director (TD)</strong>
                 </td>
-                <td style="width: 34%; padding-bottom: 5px;">
-                    Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
-                </td>
-                <td style="width: 33%; padding-bottom: 5px;">
-                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>KPP Teknik</strong>
+                <td style="width: 50%; padding-bottom: 5px; text-align: center;">
+                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
                 </td>
             </tr>
-            <!-- Spasi Tanda Tangan -->
+            <!-- Spasi Tanda Tangan Baris 1 -->
             <tr style="vertical-align: bottom;">
-                <td style="height: 65px;"></td>
-                <td style="height: 65px;"></td>
-                <td style="height: 65px;"></td>
+                <td style="height: 60px;"></td>
+                <td style="height: 60px;"></td>
             </tr>
-            <!-- Baris Nama & NIP -->
+            <!-- Nama & NIP Baris 1 -->
             <tr style="vertical-align: top;">
-                <td>
+                <td style="text-align: center;">
                     <u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span>
                 </td>
-                <td>
-                    <u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP: <span id="pdfTuNip">197308032014091001</span>
-                </td>
-                <td>
+                <td style="text-align: center;">
                     <u id="pdfKppNama" style="font-weight: bold;">AZIM RIFA'I S.T</u><br>NIP: <span id="pdfKppNip">199309152025041003</span>
+                </td>
+            </tr>
+
+            <!-- Baris 2: Kepala Sub. Bag. TU di Bawah Tengah -->
+            <tr>
+                <td colspan="2" style="text-align: center; padding-top: 25px;">
+                    Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 60px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP: <span id="pdfTuNip">197308032014091001</span>
                 </td>
             </tr>
         </table>
