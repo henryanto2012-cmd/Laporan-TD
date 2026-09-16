@@ -56,7 +56,7 @@
         <div class="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200 mb-5">
             <h3 class="font-bold text-green-800 mb-2 text-xs sm:text-sm">PENGATURAN PENANDATANGANAN LAPORAN (PDF)</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
-                <!-- Technical Director (Tetap Manual) -->
+                <!-- Technical Director (Manual) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">Technical Director (TD)</label>
                     <input type="text" id="tdNama" placeholder="Nama TD" class="w-full p-2 border rounded mb-2 bg-white">
@@ -65,7 +65,7 @@
                 <!-- KPP Teknik (Default Permanen & Dikunci) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">KPP Teknik</label>
-                    <input type="text" id="kppNama" value="AZIM RIFA'I S.T" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
+                    <input type="text" id="kppNama" value="Azim Rifa S.T" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
                     <input type="text" id="kppNip" value="199309152025041003" readonly class="w-full p-2 border rounded bg-gray-100 text-gray-700 cursor-not-allowed">
                 </div>
                 <!-- Kepala Sub. Bag. TU (Default Permanen & Dikunci) -->
@@ -140,7 +140,7 @@
         </div>
 
         <!-- Tabel PDF Berwarna -->
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <thead>
                 <tr style="background-color: #2563eb !important; color: white !important; text-align: left; font-size: 12px;">
                     <th style="padding: 10px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
@@ -152,28 +152,39 @@
             </tbody>
         </table>
 
-        <!-- Tanda Tangan PDF -->
+        <!-- Tanda Tangan PDF Format Segitiga (Kiri-Kanan di Atas, Kasubbag TU di Tengah Bawah) -->
         <table style="width: 100%; text-align: center; font-size: 11px; margin-top: 10px; border: none;">
+            <!-- Baris 1: Technical Director (Kiri) & KPP Teknik (Kanan) -->
             <tr style="vertical-align: bottom;">
-                <td style="width: 33%;">
-                    <br>Mengetahui,<br><strong>KPP Teknik</strong>
+                <td style="width: 50%; padding-bottom: 5px;">
+                    <br><strong>Technical Director</strong>
                 </td>
-                <td style="width: 33%;">
-                    <br><br><strong>Technical Director (TD)</strong>
-                </td>
-                <td style="width: 33%;">
-                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br>Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                <td style="width: 50%; padding-bottom: 5px;">
+                    Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
                 </td>
             </tr>
-            <tr>
-                <td style="height: 70px;"></td>
-                <td style="height: 70px;"></td>
-                <td style="height: 70px;"></td>
+            <tr style="vertical-align: bottom;">
+                <td style="height: 60px;"></td>
+                <td style="height: 60px;"></td>
             </tr>
-            <tr>
-                <td><u id="pdfKppNama" style="font-weight: bold;">AZIM RIFA'I S.T</u><br>NIP: <span id="pdfKppNip">199309152025041003</span></td>
+            <tr style="vertical-align: top;">
+                <td><u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u><br>NIP: <span id="pdfKppNip">199309152025041003</span></td>
                 <td><u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span></td>
-                <td><u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP: <span id="pdfTuNip">197308032014091001</span></td>
+            </tr>
+
+            <!-- Baris 2: Kepala Sub. Bag. TU di Tengah Bawah -->
+            <tr>
+                <td colspan="2" style="padding-top: 20px;">
+                    Mengetahui,<br><strong>Kasubbag TU TVRI Stasiun Kalimantan Utara</strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 60px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP. <span id="pdfTuNip">197308032014091001</span>
+                </td>
             </tr>
         </table>
     </div>
@@ -194,7 +205,7 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Hanya simpan & muat nama/NIP untuk bagian TD (karena KPP dan TU sudah permanen)
+            // Simpan & muat nama/NIP untuk bagian TD
             ['tdNama', 'tdNip'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
@@ -311,7 +322,7 @@
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
-            // Masukkan data tanda tangan (TD manual, KPP & TU otomatis dari nilai input permanen)
+            // Masukkan data tanda tangan
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
             document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
             document.getElementById('pdfKppNama').innerText = document.getElementById('kppNama').value;
