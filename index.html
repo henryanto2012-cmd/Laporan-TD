@@ -64,7 +64,7 @@
                 <!-- KPP Teknik (Default Permanen & Dikunci) -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">KPP Teknik</label>
-                    <input type="text" id="kppNama" value="Azim Rifa'i S.T" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
+                    <input type="text" id="kppNama" value="AZIM RIFA'I S.T" readonly class="w-full p-2 border rounded mb-2 bg-gray-100 text-gray-700 cursor-not-allowed">
                     <input type="text" id="kppNip" value="199309152025041003" readonly class="w-full p-2 border rounded bg-gray-100 text-gray-700 cursor-not-allowed">
                 </div>
                 <!-- Kepala Sub. Bag. TU (Default Permanen & Dikunci) -->
@@ -164,29 +164,29 @@
             </tbody>
         </table>
 
-        <!-- Tanda Tangan PDF -->
+        <!-- Tanda Tangan PDF (Padding Kiri & Kanan 50px) -->
         <table style="width: 100%; text-align: center; font-size: 10px; margin-top: 15px; border: none;">
-            <!-- Baris 1: Kiri (TD) & Kanan (KPP Teknik + Tanggal) -->
+            <!-- Baris Jabatan & Tanggal -->
             <tr style="vertical-align: bottom;">
-                <td style="width: 50%; padding-bottom: 5px; text-align: center;">
+                <td style="width: 50%; padding-bottom: 5px; text-align: left; padding-left: 50px;">
                     <br><strong>Technical Director (TD)</strong>
                 </td>
-                <td style="width: 50%; padding-bottom: 5px; text-align: center;">
+                <td style="width: 50%; padding-bottom: 5px; text-align: right; padding-right: 50px;">
                     Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
                 </td>
             </tr>
             <!-- Spasi Tanda Tangan Baris 1 -->
             <tr style="vertical-align: bottom;">
-                <td style="height: 60px;"></td>
-                <td style="height: 60px;"></td>
+                <td style="height: 60px; padding-left: 50px;"></td>
+                <td style="height: 60px; padding-right: 50px;"></td>
             </tr>
-            <!-- Nama & NIP Baris 1 -->
+            <!-- Baris Nama & NIP Baris 1 -->
             <tr style="vertical-align: top;">
-                <td style="text-align: center;">
+                <td style="text-align: left; padding-left: 50px;">
                     <u id="pdfTdNama" style="font-weight: bold;"></u><br>NIP: <span id="pdfTdNip"></span>
                 </td>
-                <td style="text-align: center;">
-                    <u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u><br>NIP: <span id="pdfKppNip">199309152025041003</span>
+                <td style="text-align: right; padding-right: 50px;">
+                    <u id="pdfKppNama" style="font-weight: bold;">AZIM RIFA'I S.T</u><br>NIP: <span id="pdfKppNip">199309152025041003</span>
                 </td>
             </tr>
 
