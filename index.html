@@ -142,8 +142,13 @@
     <!-- 5. AREA KHUSUS CETAK PDF (Tersembunyi di web, tampil rapi saat dicetak) -->
     <div id="printArea" style="background-color: white; padding: 20px; font-family: 'Arial', sans-serif;">
         <!-- Header PDF Berwarna Biru -->
-        <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+        <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 10px;">
             <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
+        </div>
+
+        <!-- Posisi PDU di antara Judul dan Tabel, rata kanan -->
+        <div style="text-align: right; margin-bottom: 10px; font-size: 12px;">
+            <span id="pdfPdUmumContainer" style="font-weight: bold;"></span>
         </div>
 
         <!-- Tabel PDF Berwarna -->
@@ -166,7 +171,6 @@
                     <br><strong>Technical Director (TD)</strong>
                 </td>
                 <td style="width: 50%; padding-bottom: 5px;">
-                    <span id="pdfPdUmumContainer" style="display: block; margin-bottom: 3px;"></span>
                     Tanjung Selor, <span id="pdfTanggalTtd"></span><br><strong>KPP Teknik</strong>
                 </td>
             </tr>
@@ -330,7 +334,7 @@
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
-            // Format penulisan PDU : [nama] di atas KPP Teknik
+            // Format penulisan PDU : [nama] di antara judul dan tabel (rata kanan) dengan tebal (bold)
             let pdUmumVal = document.getElementById('inputPdUmum').value;
             let pdContainer = document.getElementById('pdfPdUmumContainer');
             if(pdUmumVal) {
