@@ -14,6 +14,10 @@
 
         /* CSS Khusus untuk Pengaturan Cetak PDF / Print */
         @media print {
+            body {
+                background-color: white !important;
+            }
+
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -154,14 +158,12 @@
     <!-- 5. AREA KHUSUS CETAK PDF (Tersembunyi di web, tampil rapi saat dicetak) -->
     <div id="printArea" style="background-color: white; padding: 20px; font-family: 'Arial', sans-serif;">
         <!-- Header PDF Berwarna Biru -->
-        <!-- UBAH: margin-bottom ditambahkan menjadi 25px agar jaraknya lebih jauh ke bawah -->
         <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 25px;">
             <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
         <!-- Atribut Atas: Kiri (PD Program, TD Program) & Kanan (PD Berita, PD Umum) -->
-        <!-- UBAH: font-size diubah menjadi 15px, dan margin-bottom diubah ke 15px agar jarak ke tabel lebih lega -->
-        <table style="width: 100%; font-size: 15px; margin-bottom: 11px; border: none;">
+        <table style="width: 100%; font-size: 12px; margin-bottom: 15px; border: none;">
             <tr>
                 <!-- Kiri: PD Program & TD Program -->
                 <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 5px;">
@@ -424,12 +426,20 @@
 
             let leftHtml = '';
             if (pdProg) leftHtml += `PD Program : ${pdProg}<br>`;
+            else leftHtml += `PD Program : -<br>`;
+            
             if (tdProg) leftHtml += `TD Program : ${tdProg}`;
+            else leftHtml += `TD Program : -`;
+            
             document.getElementById('pdfLeftAttrs').innerHTML = leftHtml;
 
             let rightHtml = '';
             if (pdBerita) rightHtml += `PD Berita : ${pdBerita}<br>`;
+            else rightHtml += `PD Berita : -<br>`;
+            
             if (pdUmum) rightHtml += `PD Umum : ${pdUmum}`;
+            else rightHtml += `PD Umum : -`;
+            
             document.getElementById('pdfRightAttrs').innerHTML = rightHtml;
 
             // Masukkan data tanda tangan
