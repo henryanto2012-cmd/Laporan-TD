@@ -75,11 +75,23 @@
                 </div>
             </div>
 
-            <!-- Input Manual PD Umum -->
-            <div class="grid grid-cols-1 gap-3 text-xs sm:text-sm pt-2 border-t border-green-200">
+            <!-- Input Atribut Tambahan (PD Program, TD Program, PD Berita, PD Umum) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs sm:text-sm pt-3 border-t border-green-200">
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-1">PD Umum (Manual)</label>
-                    <input type="text" id="inputPdUmum" placeholder="Contoh: Nama / Keterangan PD Umum" class="w-full p-2 border rounded bg-white">
+                    <label class="block text-gray-700 font-semibold mb-1">PD Program</label>
+                    <input type="text" id="inputPdProgram" placeholder="Nama PD Program" class="w-full p-2 border rounded bg-white">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">TD Program</label>
+                    <input type="text" id="inputTdProgram" placeholder="Nama TD Program" class="w-full p-2 border rounded bg-white">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">PD Berita</label>
+                    <input type="text" id="inputPdBerita" placeholder="Nama PD Berita" class="w-full p-2 border rounded bg-white">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">PD Umum (PDU)</label>
+                    <input type="text" id="inputPdUmum" placeholder="Nama PD Umum" class="w-full p-2 border rounded bg-white">
                 </div>
             </div>
         </div>
@@ -146,10 +158,19 @@
             <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
-        <!-- Posisi PDU di antara Judul dan Tabel, rata kanan -->
-        <div style="text-align: right; margin-bottom: 10px; font-size: 12px;">
-            <span id="pdfPdUmumContainer" style="font-weight: bold;"></span>
-        </div>
+        <!-- Atribut Atas: Kiri (PD Program, TD Program) & Kanan (PD Berita, PD Umum) -->
+        <table style="width: 100%; font-size: 11px; margin-bottom: 10px; border: none;">
+            <tr>
+                <!-- Kiri: PD Program & TD Program -->
+                <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 5px;">
+                    <div id="pdfLeftAttrs" style="font-weight: bold; line-height: 1.4;"></div>
+                </td>
+                <!-- Kanan: PD Berita & PD Umum -->
+                <td style="width: 50%; text-align: right; vertical-align: top; padding-right: 5px;">
+                    <div id="pdfRightAttrs" style="font-weight: bold; line-height: 1.4;"></div>
+                </td>
+            </tr>
+        </table>
 
         <!-- Tabel PDF Berwarna -->
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -177,7 +198,7 @@
 
             <!-- BARIS 2: Jabatan (Technical Director & KPP Teknik) -->
             <tr style="vertical-align: bottom;">
-                <td style="width: 50%; text-align: left; padding-left:35px;">
+                <td style="width: 50%; text-align: left; padding-left: 35px;">
                     <strong>Technical Director (TD)</strong>
                 </td>
                 <td style="width: 50%; text-align: right; padding-right: 70px;">
@@ -193,7 +214,7 @@
 
             <!-- BARIS 3: Nama (TD di Kiri, KPP di Kanan) -->
             <tr style="vertical-align: bottom;">
-                <td style="text-align: left; padding-left: 50px; padding-bottom: 2px;">
+                <td style="text-align: left; padding-left: 45px; padding-bottom: 2px;">
                     <u id="pdfTdNama" style="font-weight: bold;"></u>
                 </td>
                 <td style="text-align: right; padding-right: 60px; padding-bottom: 2px;">
@@ -203,7 +224,7 @@
 
             <!-- BARIS 4: NIP (TD di Kiri, KPP di Kanan) -->
             <tr style="vertical-align: top;">
-                <td style="text-align: left; padding-left: 22px;">
+                <td style="text-align: left; padding-left: 35px;">
                     NIP: <span id="pdfTdNip"></span>
                 </td>
                 <td style="text-align: right; padding-right: 45px;">
@@ -211,14 +232,14 @@
                 </td>
             </tr>
 
-            <!-- Baris 2: Kepala Sub. Bag. TU di Bawah Tengah -->
+            <!-- BARIS 5: Kepala Sub. Bag. TU (Mengetahui di Tengah Bawah) -->
             <tr>
                 <td colspan="2" style="text-align: center; padding-top: 25px;">
                     Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="height: 90px;"></td>
+                <td colspan="2" style="height: 60px;"></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">
@@ -244,8 +265,8 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Simpan & muat nama/NIP TD dan PD Umum
-            ['tdNama', 'tdNip', 'inputPdUmum'].forEach(id => {
+            // Simpan & muat input form
+            ['tdNama', 'tdNip', 'inputPdProgram', 'inputTdProgram', 'inputPdBerita', 'inputPdUmum'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
             });
@@ -310,6 +331,9 @@
 
             let payload = {
                 tanggal: document.getElementById('tanggalFilter').value,
+                pdProgram: document.getElementById('inputPdProgram').value,
+                tdProgram: document.getElementById('inputTdProgram').value,
+                pdBerita: document.getElementById('inputPdBerita').value,
                 pdUmum: document.getElementById('inputPdUmum').value,
                 logs: logs,
                 ttd: {
@@ -337,14 +361,43 @@
             statusEl.innerText = "🔍 Memuat data...";
 
             google.script.run
-                .withSuccessHandler((data) => {
+                .withSuccessHandler((dataObj) => {
                     statusEl.className = "hidden";
-                    if(data.length === 0) {
+                    
+                    let dataLogs = dataObj.logs || dataObj; 
+                    
+                    if(dataLogs.length === 0) {
                         alert("Tidak ada data untuk tanggal " + tgl);
                     } else {
-                        logs = data;
+                        logs = dataLogs;
                         localStorage.setItem('logs', JSON.stringify(logs));
                         renderTable();
+
+                        // Isi kembali form jika data tersedia dari backend
+                        if(dataObj.tdNama) {
+                            document.getElementById('tdNama').value = dataObj.tdNama;
+                            localStorage.setItem('tdNama', dataObj.tdNama);
+                        }
+                        if(dataObj.tdNip) {
+                            document.getElementById('tdNip').value = dataObj.tdNip;
+                            localStorage.setItem('tdNip', dataObj.tdNip);
+                        }
+                        if(dataObj.pdProgram) {
+                            document.getElementById('inputPdProgram').value = dataObj.pdProgram;
+                            localStorage.setItem('inputPdProgram', dataObj.pdProgram);
+                        }
+                        if(dataObj.tdProgram) {
+                            document.getElementById('inputTdProgram').value = dataObj.tdProgram;
+                            localStorage.setItem('inputTdProgram', dataObj.tdProgram);
+                        }
+                        if(dataObj.pdBerita) {
+                            document.getElementById('inputPdBerita').value = dataObj.pdBerita;
+                            localStorage.setItem('inputPdBerita', dataObj.pdBerita);
+                        }
+                        if(dataObj.pdUmum) {
+                            document.getElementById('inputPdUmum').value = dataObj.pdUmum;
+                            localStorage.setItem('inputPdUmum', dataObj.pdUmum);
+                        }
                     }
                 })
                 .tarikDataByTanggal(tgl);
@@ -354,7 +407,6 @@
             if(logs.length === 0) return alert("Tidak ada data untuk dicetak!");
 
             let tglInput = document.getElementById('tanggalFilter').value;
-            
             let tglParts = tglInput.split('-');
             let bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             let namaBulan = bulanArr[parseInt(tglParts[1]) - 1];
@@ -362,14 +414,21 @@
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
-            // Format penulisan PDU : [nama] di antara judul dan tabel (rata kanan) dengan tebal (bold)
-            let pdUmumVal = document.getElementById('inputPdUmum').value;
-            let pdContainer = document.getElementById('pdfPdUmumContainer');
-            if(pdUmumVal) {
-                pdContainer.innerHTML = `PDU : ${pdUmumVal}`;
-            } else {
-                pdContainer.innerHTML = '';
-            }
+            // Atribut Atas: Kiri (PD Program, TD Program) & Kanan (PD Berita, PD Umum)
+            let pdProg = document.getElementById('inputPdProgram').value;
+            let tdProg = document.getElementById('inputTdProgram').value;
+            let pdBerita = document.getElementById('inputPdBerita').value;
+            let pdUmum = document.getElementById('inputPdUmum').value;
+
+            let leftHtml = '';
+            if (pdProg) leftHtml += `PD Program : ${pdProg}<br>`;
+            if (tdProg) leftHtml += `TD Program : ${tdProg}`;
+            document.getElementById('pdfLeftAttrs').innerHTML = leftHtml;
+
+            let rightHtml = '';
+            if (pdBerita) rightHtml += `PD Berita : ${pdBerita}<br>`;
+            if (pdUmum) rightHtml += `PD Umum : ${pdUmum}`;
+            document.getElementById('pdfRightAttrs').innerHTML = rightHtml;
 
             // Masukkan data tanda tangan
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
@@ -392,7 +451,6 @@
                 `;
             });
 
-            // Panggil fungsi cetak browser
             window.print();
         }
     </script>
