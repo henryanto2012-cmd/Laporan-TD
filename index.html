@@ -104,9 +104,37 @@
         <div class="bg-gray-50 p-3 sm:p-4 rounded-lg border mb-5">
             <h3 class="font-bold text-blue-800 mb-2 text-xs sm:text-sm">+ Tambah Baris Log Acara</h3>
             <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                <input type="text" id="inputWaktu" placeholder="Waktu (Ex: 15.55 - 15.57)" class="w-full sm:w-1/4 p-2 border rounded text-xs sm:text-sm">
-                <input type="text" id="inputProgram" placeholder="Program Acara / Filler / ILM" class="w-full sm:w-2/4 p-2 border rounded text-xs sm:text-sm">
-                <input type="text" id="inputKet" placeholder="Keterangan" class="w-full sm:w-1/4 p-2 border rounded text-xs sm:text-sm">
+                <!-- Waktu Manual -->
+                <input type="text" id="inputWaktu" placeholder="Waktu (Ex: 15.55 - 15.57)" class="w-full sm:w-1/4 p-2 border rounded text-xs sm:text-sm bg-white">
+
+                <!-- Program Acara (Dropdown + Bisa Ketik Manual / Datalist) -->
+                <input list="listProgram" id="inputProgram" placeholder="Pilih atau Ketik Program Acara" class="w-full sm:w-2/4 p-2 border rounded text-xs sm:text-sm bg-white">
+                <datalist id="listProgram">
+                    <option value="Ini Borneo">
+                    <option value="Pesona Indonesia">
+                    <option value="Anak Indonesia">
+                    <option value="Kalimantan Utara Hari Ini">
+                    <option value="Kalimantan Utara Hari Ini - Outdoor">
+                    <option value="Kaltara Sepekan">
+                    <option value="Ngopi">
+                    <option value="Kaltara Bicara">
+		    <option value="Prismatic">
+		    <option value="SIP">
+		    <option value="Mutiara Hati">
+		    <option value="Paket TVRI Daerah">
+		    <option value="Inspirasi Indonesia">
+		    <option value="Jejak Islam">
+		    <option value="Hymne TVRI">
+		    <option value="Bergabung Kaltara">
+	 	    <option value="Bergabung Nasional">
+		    <option value="Filler / ILM">
+
+                </datalist>
+                
+                <!-- Keterangan -->
+                <input type="text" id="inputKet" placeholder="Keterangan" class="w-full sm:w-1/4 p-2 border rounded text-xs sm:text-sm bg-white">
+                
+                <!-- Tombol Tambah -->
                 <button onclick="tambahLog()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-xs sm:text-sm transition">
                     + Tambah
                 </button>
@@ -163,7 +191,7 @@
         </div>
 
         <!-- Atribut Atas: Kiri (PD Program, TD Program) & Kanan (PD Berita, PD Umum) -->
-        <table style="width: 100%; font-size: 12px; margin-bottom: 15px; border: none;">
+        <table style="width: 100%; font-size: 15px; margin-bottom: 15px; border: none;">
             <tr>
                 <!-- Kiri: PD Program & TD Program -->
                 <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 5px;">
@@ -269,7 +297,6 @@
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            // Simpan & muat input form
             ['tdNama', 'tdNip', 'inputPdProgram', 'inputTdProgram', 'inputPdBerita', 'inputPdUmum'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
@@ -367,7 +394,6 @@
             google.script.run
                 .withSuccessHandler((dataObj) => {
                     statusEl.className = "hidden";
-                    
                     let dataLogs = dataObj.logs || dataObj; 
                     
                     if(dataLogs.length === 0) {
@@ -377,7 +403,6 @@
                         localStorage.setItem('logs', JSON.stringify(logs));
                         renderTable();
 
-                        // Isi kembali form jika data tersedia dari backend
                         if(dataObj.tdNama) {
                             document.getElementById('tdNama').value = dataObj.tdNama;
                             localStorage.setItem('tdNama', dataObj.tdNama);
@@ -418,7 +443,6 @@
             
             document.getElementById('pdfTanggalTtd').innerText = formatTgl;
 
-            // Atribut Atas: Kiri (PD Program, TD Program) & Kanan (PD Berita, PD Umum)
             let pdProg = document.getElementById('inputPdProgram').value;
             let tdProg = document.getElementById('inputTdProgram').value;
             let pdBerita = document.getElementById('inputPdBerita').value;
@@ -442,7 +466,6 @@
             
             document.getElementById('pdfRightAttrs').innerHTML = rightHtml;
 
-            // Masukkan data tanda tangan
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
             document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
             document.getElementById('pdfKppNama').innerText = document.getElementById('kppNama').value;
