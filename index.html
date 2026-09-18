@@ -128,7 +128,6 @@
 		    <option value="Bergabung Kaltara">
 	 	    <option value="Bergabung Nasional">
 		    <option value="Filler / ILM">
-
                 </datalist>
                 
                 <!-- Keterangan -->
@@ -139,6 +138,12 @@
                     + Tambah
                 </button>
             </div>
+        </div>
+
+        <!-- KOLOM CATATAN (Posisi di bawah kolom tambah baris log acara) -->
+        <div class="bg-yellow-50 p-3 sm:p-4 rounded-lg border border-yellow-200 mb-5">
+            <label class="block font-bold text-yellow-800 mb-1 text-xs sm:text-sm">📝 Catatan Laporan / Kendala (Opsional):</label>
+            <textarea id="inputCatatan" rows="3" placeholder="Tuliskan catatan harian atau kendala teknis di sini..." class="w-full p-2 border rounded text-xs sm:text-sm bg-white"></textarea>
         </div>
 
         <!-- ACTION TOOLBAR (Simpan & Tarik Data) -->
@@ -205,7 +210,7 @@
         </table>
 
         <!-- Tabel PDF Berwarna -->
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
             <thead>
                 <tr style="background-color: #2563eb !important; color: white !important; text-align: left; font-size: 12px;">
                     <th style="padding: 10px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
@@ -216,6 +221,12 @@
             <tbody id="pdfTabelBody" style="font-size: 11px; color: #333;">
             </tbody>
         </table>
+
+        <!-- Kotak Catatan PDF (Posisi di bawah tabel log acara) -->
+        <div style="margin-bottom: 20px; border: 1px solid #cbd5e1; padding: 10px; border-radius: 4px; background-color: #f8fafc;">
+            <strong style="font-size: 11px; color: #1e3a8a; display: block; margin-bottom: 4px;">Catatan:</strong>
+            <div id="pdfCatatanText" style="font-size: 11px; color: #333; white-space: pre-line; min-height: 35px;">-</div>
+        </div>
 
         <!-- Tanda Tangan PDF -->
         <table style="width: 100%; font-size: 10px; margin-top: 15px; border: none;">
@@ -291,13 +302,14 @@
             let savedDate = localStorage.getItem('logDate');
             if (savedDate !== today) {
                 localStorage.removeItem('logs');
+                localStorage.removeItem('inputCatatan');
                 localStorage.setItem('logDate', today);
             } else {
                 let savedLogs = localStorage.getItem('logs');
                 if (savedLogs) logs = JSON.parse(savedLogs);
             }
             
-            ['tdNama', 'tdNip', 'inputPdProgram', 'inputTdProgram', 'inputPdBerita', 'inputPdUmum'].forEach(id => {
+            ['tdNama', 'tdNip', 'inputPdProgram', 'inputTdProgram', 'inputPdBerita', 'inputPdUmum', 'inputCatatan'].forEach(id => {
                 if(localStorage.getItem(id)) document.getElementById(id).value = localStorage.getItem(id);
                 document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
             });
@@ -366,6 +378,7 @@
                 tdProgram: document.getElementById('inputTdProgram').value,
                 pdBerita: document.getElementById('inputPdBerita').value,
                 pdUmum: document.getElementById('inputPdUmum').value,
+                catatan: document.getElementById('inputCatatan').value,
                 logs: logs,
                 ttd: {
                     tdNama: document.getElementById('tdNama').value, tdNip: document.getElementById('tdNip').value,
@@ -427,6 +440,10 @@
                             document.getElementById('inputPdUmum').value = dataObj.pdUmum;
                             localStorage.setItem('inputPdUmum', dataObj.pdUmum);
                         }
+                        if(dataObj.catatan) {
+                            document.getElementById('inputCatatan').value = dataObj.catatan;
+                            localStorage.setItem('inputCatatan', dataObj.catatan);
+                        }
                     }
                 })
                 .tarikDataByTanggal(tgl);
@@ -447,6 +464,7 @@
             let tdProg = document.getElementById('inputTdProgram').value;
             let pdBerita = document.getElementById('inputPdBerita').value;
             let pdUmum = document.getElementById('inputPdUmum').value;
+            let catatanVal = document.getElementById('inputCatatan').value.trim();
 
             let leftHtml = '';
             if (pdProg) leftHtml += `PD Program : ${pdProg}<br>`;
@@ -465,6 +483,9 @@
             else rightHtml += `PD Umum : -`;
             
             document.getElementById('pdfRightAttrs').innerHTML = rightHtml;
+
+            // Masukkan nilai catatan ke area cetak
+            document.getElementById('pdfCatatanText').innerText = catatanVal ? catatanVal : "-";
 
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
             document.getElementById('pdfTdNip').innerText = document.getElementById('tdNip').value || '....................';
