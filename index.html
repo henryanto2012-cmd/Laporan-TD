@@ -136,16 +136,16 @@
                     <option value="Kaltara Sepekan">
                     <option value="Ngopi">
                     <option value="Kaltara Bicara">
-		    <option value="Prismatic">
-		    <option value="SIP">
-		    <option value="Mutiara Hati">
-		    <option value="Paket TVRI Daerah">
-		    <option value="Inspirasi Indonesia">
-		    <option value="Jejak Islam">
-		    <option value="Hymne TVRI">
-		    <option value="Bergabung Kaltara">
-	 	    <option value="Bergabung Nasional">
-		    <option value="Filler / ILM">
+                    <option value="Prismatic">
+                    <option value="SIP">
+                    <option value="Mutiara Hati">
+                    <option value="Paket TVRI Daerah">
+                    <option value="Inspirasi Indonesia">
+                    <option value="Jejak Islam">
+                    <option value="Hymne TVRI">
+                    <option value="Bergabung Kaltara">
+                    <option value="Bergabung Nasional">
+                    <option value="Filler / ILM">
                 </datalist>
                 
                 <!-- Keterangan -->
@@ -248,62 +248,67 @@
 
             <!-- Tanda Tangan PDF -->
             <table style="width: 100%; font-size: 9px; margin-top: 5px; border: none;">
-                <!-- BARIS 1: Tanggal (Kanan Atas) -->
+                <!-- Baris 1: Tanggal di Kanan atas (Technical Director di kiri dibiarkan kosong agar posisinya turun sejajar KPP) -->
                 <tr>
-                    <td style="width: 50%;"></td>
-                    <td style="width: 50%; text-align: right; padding-right: 25px; padding-bottom: 5px;">
-                        Tanjung Selor, <span id="pdfTanggalTtd"></span>
+                    <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 25px;">
+                        <div style="height: 15px;"></div>
+                    </td>
+                    <td style="width: 50%; text-align: right; vertical-align: top; padding-right: 25px;">
+                        <div style="display: inline-block; text-align: center; width: auto; min-width: 180px;">
+                            Tanjung Selor, <span id="pdfTanggalTtd"></span>
+                        </div>
                     </td>
                 </tr>
 
-                <!-- BARIS 2: Jabatan -->
-                <tr style="vertical-align: bottom;">
-                    <td style="width: 50%; text-align: left; padding-left: 25px;">
-                        <strong>Technical Director (TD)</strong>
+                <!-- Baris 2: Technical Director (Kiri) & KPP Teknik (Kanan) -> Kini Sejajar Sempurna -->
+                <tr>
+                    <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 25px;">
+                        <div style="display: inline-block; text-align: left; width: auto; min-width: 180px;">
+                            <strong>Technical Director (TD)</strong>
+                        </div>
                     </td>
-                    <td style="width: 50%; text-align: right; padding-right: 50px;">
-                        <strong>KPP Teknik</strong>
-                    </td>
-                </tr>
-                
-                <!-- SPASI TANDA TANGAN -->
-                <tr style="vertical-align: bottom;">
-                    <td style="height: 60px; padding-left: 30px;"></td>
-                    <td style="height: 60px; padding-right: 30px;"></td>
-                </tr>
-
-                <!-- BARIS 3: Nama -->
-                <tr style="vertical-align: bottom;">
-                    <td style="text-align: left; padding-left: 40px; padding-bottom: 2px;">
-                        <u id="pdfTdNama" style="font-weight: bold;"></u>
-                    </td>
-                    <td style="text-align: right; padding-right: 40px; padding-bottom: 2px;">
-                        <u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u>
+                    <td style="width: 50%; text-align: right; vertical-align: top; padding-right: 25px;">
+                        <div style="display: inline-block; text-align: center; width: auto; min-width: 180px;">
+                            <strong>KPP Teknik</strong>
+                        </div>
                     </td>
                 </tr>
 
-                <!-- BARIS 4: NIP -->
-                <tr style="vertical-align: top;">
-                    <td style="text-align: left; padding-left: 25px;">
-                        NIP: <span id="pdfTdNip"></span>
+                <!-- Baris 3: Area Kosong Tanda Tangan (80px) -->
+                <tr>
+                    <td style="width: 50%; vertical-align: top; padding-left: 25px;">
+                        <div style="height: 80px;"></div>
                     </td>
-                    <td style="text-align: right; padding-right: 30px;">
-                        NIP: <span id="pdfKppNip">199309152025041003</span>
+                    <td style="width: 50%; vertical-align: top; padding-right: 25px;">
+                        <div style="height: 80px;"></div>
                     </td>
                 </tr>
 
-                <!-- BARIS 5: Kepala Sub. Bag. TU -->
+                <!-- Baris 4: Nama & NIP TD dan KPP Teknik -->
                 <tr>
-                    <td colspan="2" style="text-align: center; padding-top: 15px;">
-                        Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                    <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 25px;">
+                        <div style="display: inline-block; text-align: left; width: auto; min-width: 180px;">
+                            <u id="pdfTdNama" style="font-weight: bold; display: inline-block; border-bottom: 1px solid #000; padding-bottom: 1px;"></u><br>
+                            <span style="display: inline-block; margin-top: 2px;">NIP: <span id="pdfTdNip"></span></span>
+                        </div>
+                    </td>
+                    <td style="width: 50%; text-align: right; vertical-align: top; padding-right: 25px;">
+                        <div style="display: inline-block; text-align: center; width: auto; min-width: 180px;">
+                            <u id="pdfKppNama" style="font-weight: bold; display: inline-block; border-bottom: 1px solid #000; padding-bottom: 1px;">Azim Rifa'i S.T</u><br>
+                            <span style="display: inline-block; margin-top: 2px;">NIP: <span id="pdfKppNip">199309152025041003</span></span>
+                        </div>
                     </td>
                 </tr>
+
+                <!-- Baris 5: Kepala Sub. Bag. TU (Ditengah, dengan area TTD diperlebar menjadi 75px) -->
                 <tr>
-                    <td colspan="2" style="height: 70px;"></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: center;">
-                        <u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP: <span id="pdfTuNip">197308032014091001</span>
+                    <td colspan="2" style="text-align: center; padding-top: 25px;">
+                        <div style="display: inline-block; text-align: center; width: auto; min-width: 180px;">
+                            Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                            <div style="height: 75px;"></div>
+                            <u id="pdfTuNama" style="font-weight: bold; display: inline-block; border-bottom: 1px solid #000; padding-bottom: 1px;">Ari Jaya Wijaya, SE., M.Si</u><br>
+                            <span style="display: inline-block; margin-top: 2px;">NIP: <span id="pdfTuNip">197308032014091001</span></span>
+                        </div>
                     </td>
                 </tr>
             </table>
