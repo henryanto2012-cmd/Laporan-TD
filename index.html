@@ -43,21 +43,22 @@
                 display: none !important;
             }
 
-            /* ATURAN ANTI-TERPOTONG (PAGE BREAK) */
-            #printArea {
-                page-break-after: avoid;
-            }
-            
-            table, tr, td, th {
+            /* Mencegah baris tabel terpotong di tengah */
+            tr {
                 page-break-inside: avoid;
                 break-inside: avoid;
             }
 
-            /* Memaksa area catatan dan tanda tangan agar tetap menyatu dalam satu blok */
+            /* Memastikan header tabel ikut muncul di halaman berikutnya jika tabel terpotong */
+            thead {
+                display: table-header-group;
+            }
+
+            /* Memaksa area catatan dan tanda tangan agar selalu gabung dalam satu blok utuh */
             .pdf-footer-section {
                 page-break-inside: avoid;
                 break-inside: avoid;
-                margin-top: 10px;
+                margin-top: 15px;
             }
         }
     </style>
@@ -265,7 +266,7 @@
                     </td>
                 </tr>
                 
-                <!-- SPASI TANDA TANGAN (Dibuat sedikit lebih ringkas agar aman) -->
+                <!-- SPASI TANDA TANGAN -->
                 <tr style="vertical-align: bottom;">
                     <td style="height: 60px; padding-left: 30px;"></td>
                     <td style="height: 60px; padding-right: 30px;"></td>
