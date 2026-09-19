@@ -42,6 +42,23 @@
             .no-print {
                 display: none !important;
             }
+
+            /* ATURAN ANTI-TERPOTONG (PAGE BREAK) */
+            #printArea {
+                page-break-after: avoid;
+            }
+            
+            table, tr, td, th {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            /* Memaksa area catatan dan tanda tangan agar tetap menyatu dalam satu blok */
+            .pdf-footer-section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
@@ -140,7 +157,7 @@
             </div>
         </div>
 
-        <!-- KOLOM CATATAN (Posisi di bawah kolom tambah baris log acara) -->
+        <!-- KOLOM CATATAN -->
         <div class="bg-yellow-50 p-3 sm:p-4 rounded-lg border border-yellow-200 mb-5">
             <label class="block font-bold text-yellow-800 mb-1 text-xs sm:text-sm">📝 Catatan Laporan / Kendala (Opsional):</label>
             <textarea id="inputCatatan" rows="3" placeholder="Tuliskan catatan harian atau kendala teknis di sini..." class="w-full p-2 border rounded text-xs sm:text-sm bg-white"></textarea>
@@ -188,108 +205,108 @@
         </div>
     </div>
 
-    <!-- 5. AREA KHUSUS CETAK PDF (Tersembunyi di web, tampil rapi saat dicetak) -->
-    <div id="printArea" style="background-color: white; padding: 20px; font-family: 'Arial', sans-serif;">
+    <!-- 5. AREA KHUSUS CETAK PDF -->
+    <div id="printArea" style="background-color: white; padding: 15px; font-family: 'Arial', sans-serif;">
         <!-- Header PDF Berwarna Biru -->
-        <div style="background-color: #1e3a8a !important; color: white !important; padding: 12px 15px; border-radius: 6px; text-align: center; margin-bottom: 25px;">
-            <h1 style="margin: 0; font-size: 16px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
+        <div style="background-color: #1e3a8a !important; color: white !important; padding: 10px 15px; border-radius: 6px; text-align: center; margin-bottom: 15px;">
+            <h1 style="margin: 0; font-size: 15px; font-weight: bold; letter-spacing: 1px;">LAPORAN HARIAN TECHNICAL DIRECTOR (TD)</h1>
         </div>
 
-        <!-- Atribut Atas: Kiri (PD Program, TD Program) & Kanan (PD Berita, PD Umum) -->
-        <table style="width: 100%; font-size: 15px; margin-bottom: 15px; border: none;">
+        <!-- Atribut Atas -->
+        <table style="width: 100%; font-size: 13px; margin-bottom: 10px; border: none;">
             <tr>
-                <!-- Kiri: PD Program & TD Program -->
                 <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 5px;">
-                    <div id="pdfLeftAttrs" style="font-weight: normal; line-height: 1.5;"></div>
+                    <div id="pdfLeftAttrs" style="font-weight: normal; line-height: 1.4;"></div>
                 </td>
-                <!-- Kanan: PD Berita & PD Umum -->
                 <td style="width: 50%; text-align: right; vertical-align: top; padding-right: 5px;">
-                    <div id="pdfRightAttrs" style="font-weight: normal; line-height: 1.5;"></div>
+                    <div id="pdfRightAttrs" style="font-weight: normal; line-height: 1.4;"></div>
                 </td>
             </tr>
         </table>
 
         <!-- Tabel PDF Berwarna -->
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
             <thead>
-                <tr style="background-color: #2563eb !important; color: white !important; text-align: left; font-size: 12px;">
-                    <th style="padding: 10px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
-                    <th style="padding: 10px; border: 1px solid #1d4ed8; width: 45%;">Program Acara / Filler / ILM</th>
-                    <th style="padding: 10px; border: 1px solid #1d4ed8; width: 30%;">Keterangan</th>
+                <tr style="background-color: #2563eb !important; color: white !important; text-align: left; font-size: 11px;">
+                    <th style="padding: 6px 8px; border: 1px solid #1d4ed8; width: 25%;">Waktu</th>
+                    <th style="padding: 6px 8px; border: 1px solid #1d4ed8; width: 45%;">Program Acara / Filler / ILM</th>
+                    <th style="padding: 6px 8px; border: 1px solid #1d4ed8; width: 30%;">Keterangan</th>
                 </tr>
             </thead>
-            <tbody id="pdfTabelBody" style="font-size: 11px; color: #333;">
+            <tbody id="pdfTabelBody" style="font-size: 10px; color: #333;">
             </tbody>
         </table>
 
-        <!-- Kotak Catatan PDF (Posisi di bawah tabel log acara) -->
-        <div style="margin-bottom: 20px; border: 1px solid #cbd5e1; padding: 10px; border-radius: 4px; background-color: #f8fafc;">
-            <strong style="font-size: 11px; color: #1e3a8a; display: block; margin-bottom: 4px;">Catatan:</strong>
-            <div id="pdfCatatanText" style="font-size: 11px; color: #333; white-space: pre-line; min-height: 35px;">-</div>
+        <!-- BLOK UTAMA FOOTER (Catatan + Tanda Tangan dibungkus agar tidak terpotong terpisah) -->
+        <div class="pdf-footer-section">
+            <!-- Kotak Catatan PDF -->
+            <div style="margin-bottom: 10px; border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px; background-color: #f8fafc;">
+                <strong style="font-size: 10px; color: #1e3a8a; display: block; margin-bottom: 2px;">Catatan:</strong>
+                <div id="pdfCatatanText" style="font-size: 10px; color: #333; white-space: pre-line; min-height: 25px;">-</div>
+            </div>
+
+            <!-- Tanda Tangan PDF -->
+            <table style="width: 100%; font-size: 9px; margin-top: 5px; border: none;">
+                <!-- BARIS 1: Tanggal (Kanan Atas) -->
+                <tr>
+                    <td style="width: 50%;"></td>
+                    <td style="width: 50%; text-align: right; padding-right: 25px; padding-bottom: 5px;">
+                        Tanjung Selor, <span id="pdfTanggalTtd"></span>
+                    </td>
+                </tr>
+
+                <!-- BARIS 2: Jabatan -->
+                <tr style="vertical-align: bottom;">
+                    <td style="width: 50%; text-align: left; padding-left: 25px;">
+                        <strong>Technical Director (TD)</strong>
+                    </td>
+                    <td style="width: 50%; text-align: right; padding-right: 50px;">
+                        <strong>KPP Teknik</strong>
+                    </td>
+                </tr>
+                
+                <!-- SPASI TANDA TANGAN (Dibuat sedikit lebih ringkas agar aman) -->
+                <tr style="vertical-align: bottom;">
+                    <td style="height: 60px; padding-left: 30px;"></td>
+                    <td style="height: 60px; padding-right: 30px;"></td>
+                </tr>
+
+                <!-- BARIS 3: Nama -->
+                <tr style="vertical-align: bottom;">
+                    <td style="text-align: left; padding-left: 25px; padding-bottom: 2px;">
+                        <u id="pdfTdNama" style="font-weight: bold;"></u>
+                    </td>
+                    <td style="text-align: right; padding-right: 40px; padding-bottom: 2px;">
+                        <u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u>
+                    </td>
+                </tr>
+
+                <!-- BARIS 4: NIP -->
+                <tr style="vertical-align: top;">
+                    <td style="text-align: left; padding-left: 25px;">
+                        NIP: <span id="pdfTdNip"></span>
+                    </td>
+                    <td style="text-align: right; padding-right: 30px;">
+                        NIP: <span id="pdfKppNip">199309152025041003</span>
+                    </td>
+                </tr>
+
+                <!-- BARIS 5: Kepala Sub. Bag. TU -->
+                <tr>
+                    <td colspan="2" style="text-align: center; padding-top: 15px;">
+                        Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="height: 45px;"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP: <span id="pdfTuNip">197308032014091001</span>
+                    </td>
+                </tr>
+            </table>
         </div>
-
-        <!-- Tanda Tangan PDF -->
-        <table style="width: 100%; font-size: 10px; margin-top: 15px; border: none;">
-            
-            <!-- BARIS 1: Tanggal (Kanan Atas) -->
-            <tr>
-                <td style="width: 50%;"></td>
-                <td style="width: 50%; text-align: right; padding-right: 35px; padding-bottom: 10px;">
-                    Tanjung Selor, <span id="pdfTanggalTtd"></span>
-                </td>
-            </tr>
-
-            <!-- BARIS 2: Jabatan (Technical Director & KPP Teknik) -->
-            <tr style="vertical-align: bottom;">
-                <td style="width: 50%; text-align: left; padding-left: 35px;">
-                    <strong>Technical Director (TD)</strong>
-                </td>
-                <td style="width: 50%; text-align: right; padding-right: 70px;">
-                    <strong>KPP Teknik</strong>
-                </td>
-            </tr>
-            
-            <!-- SPASI TANDA TANGAN -->
-            <tr style="vertical-align: bottom;">
-                <td style="height: 90px; padding-left: 50px;"></td>
-                <td style="height: 90px; padding-right: 50px;"></td>
-            </tr>
-
-            <!-- BARIS 3: Nama (TD di Kiri, KPP di Kanan) -->
-            <tr style="vertical-align: bottom;">
-                <td style="text-align: left; padding-left: 45px; padding-bottom: 2px;">
-                    <u id="pdfTdNama" style="font-weight: bold;"></u>
-                </td>
-                <td style="text-align: right; padding-right: 60px; padding-bottom: 2px;">
-                    <u id="pdfKppNama" style="font-weight: bold;">Azim Rifa'i S.T</u>
-                </td>
-            </tr>
-
-            <!-- BARIS 4: NIP (TD di Kiri, KPP di Kanan) -->
-            <tr style="vertical-align: top;">
-                <td style="text-align: left; padding-left: 35px;">
-                    NIP: <span id="pdfTdNip"></span>
-                </td>
-                <td style="text-align: right; padding-right: 45px;">
-                    NIP: <span id="pdfKppNip">199309152025041003</span>
-                </td>
-            </tr>
-
-            <!-- BARIS 5: Kepala Sub. Bag. TU (Mengetahui di Tengah Bawah) -->
-            <tr>
-                <td colspan="2" style="text-align: center; padding-top: 25px;">
-                    Mengetahui,<br><strong>Kepala Sub. Bag. TU</strong>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="height: 60px;"></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: center;">
-                    <u id="pdfTuNama" style="font-weight: bold;">Ari Jaya Wijaya, SE., M.Si</u><br>NIP: <span id="pdfTuNip">197308032014091001</span>
-                </td>
-            </tr>
-        </table>
     </div>
 
     <script>
@@ -484,7 +501,6 @@
             
             document.getElementById('pdfRightAttrs').innerHTML = rightHtml;
 
-            // Masukkan nilai catatan ke area cetak
             document.getElementById('pdfCatatanText').innerText = catatanVal ? catatanVal : "-";
 
             document.getElementById('pdfTdNama').innerText = document.getElementById('tdNama').value || '....................';
@@ -500,9 +516,9 @@
                 let bgColor = i % 2 === 0 ? '#f8fafc' : '#ffffff';
                 pdfBody.innerHTML += `
                     <tr style="background-color: ${bgColor}; border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 8px; border: 1px solid #cbd5e1;">${log.waktu}</td>
-                        <td style="padding: 8px; border: 1px solid #cbd5e1;">${log.program}</td>
-                        <td style="padding: 8px; border: 1px solid #cbd5e1;">${log.keterangan}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${log.waktu}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${log.program}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${log.keterangan}</td>
                     </tr>
                 `;
             });
